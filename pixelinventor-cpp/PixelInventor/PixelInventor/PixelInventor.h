@@ -1,5 +1,6 @@
 #pragma once
-
+#include "World.h"
+#include "Settings.h"
 namespace PixelInventor {
 	class PixelInventor {
 
@@ -7,6 +8,7 @@ namespace PixelInventor {
 		PixelInventor();
 		~PixelInventor();
 		static PixelInventor* GAME;
+		World world;
 	private:
 		void start();
 		void update();

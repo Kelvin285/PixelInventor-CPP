@@ -22,6 +22,27 @@
     <Filter Include="Source Files\main\PixelInventor\Game">
       <UniqueIdentifier>{259daa3f-9c46-452a-9987-24e81d1f4397}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{89e84cb9-280f-4810-8052-7958836e1f81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main\PixelInventor\Game\World">
+      <UniqueIdentifier>{adfd2897-ecfc-40e3-ba81-0ff17df0bd39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main\PixelInventor\Game\World\Chunks">
+      <UniqueIdentifier>{8564cdef-449e-4a9e-be03-f93f2441a5bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main\PixelInventor\Game\Tiles">
+      <UniqueIdentifier>{c6602f1b-7d1f-4154-b8f3-9acf27afff70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main\PixelInventor\Game\Renderer">
+      <UniqueIdentifier>{c9009f22-f485-4973-85ef-924f7a542b5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main\PixelInventor\Game\Renderer\World">
+      <UniqueIdentifier>{79fd8225-7763-477f-95f1-e38168b849f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\main\PixelInventor\Util">
+      <UniqueIdentifier>{3cef26b7-d9b7-46a1-92a4-6f29717bfcbe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,6 +54,18 @@
     <ClCompile Include="Settings.cpp">
       <Filter>Source Files\main\PixelInventor\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Chunk.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\World\Chunks</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkRenderer.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Renderer\World</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PixelInventor.h">
@@ -41,5 +74,31 @@
     <ClInclude Include="Settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Chunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArrayList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HashMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="basic.vert.glsl">
+      <Filter>Source Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
