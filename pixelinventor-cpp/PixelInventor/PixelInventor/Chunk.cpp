@@ -10,7 +10,7 @@
 
 namespace PixelInventor {
 	Chunk::Chunk() {
-
+		vaoHandle = 0;
 	}
 	Chunk::~Chunk() {
 		glDeleteVertexArrays(1, &vaoHandle);
