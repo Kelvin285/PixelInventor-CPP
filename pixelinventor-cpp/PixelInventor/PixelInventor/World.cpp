@@ -17,4 +17,16 @@ namespace PixelInventor {
 	void World::render() {
 		chunk.render();
 	}
+	
+	Chunk World::getChunk(int x, int y) {
+
+	}
+
+	bool World::doesChunkExist(int x, int y) {
+
+	}
+
+	std::map<glm::vec2, Chunk> World::getChunks() {
+
+	}
 }

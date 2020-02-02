@@ -4,23 +4,40 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "Shaders.h"
+#include "Textures.h"
+#include "Constants.h"
+#include "Settings.h"
+#include "SpriteRenderer.h"
 using namespace std;
 namespace PixelInventor {
+    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    GLFWwindow* window;
 
-    PixelInventor* PixelInventor::GAME = nullptr;
-
-	PixelInventor::PixelInventor() {
-        GAME = this;
-        
+	PixelInventor::PixelInventor() {       
         start();
 	}
 	PixelInventor::~PixelInventor() {
         world.~World();
+        Shaders::dispose();
+        Textures::dispose();
+        delete Constants::spriteRenderer;
 	}
 
+    void PixelInventor::initGL() {
+        Textures::load();
+        Shaders::init();
+        glm::mat4 projection = glm::ortho(0.0f, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT, 0.0f, -1.0f, 1.0f);
+        Shaders::DEFAULT.setMat4("projection", projection);
+        Shaders::DEFAULT.setInt("uTex", 0);
+        Shaders::DEFAULT.setInt("templateTex", 1);
+        Shaders::DEFAULT.setInt("overlay", 2);
+        Constants::spriteRenderer = new SpriteRenderer(Shaders::DEFAULT);
+        glfwSetKeyCallback(window, key_callback);
+    }
 	void PixelInventor::start() {
-        GLFWwindow* window;
-
+        
+        
         /* Initialize the library */
         if (!glfwInit())
             std::exit(1);
@@ -28,7 +45,7 @@ namespace PixelInventor {
        
 
         /* Create a windowed mode window and its OpenGL context */
-        window = glfwCreateWindow(640, 480, "PixelInventor", NULL, NULL);
+        window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "PixelInventor", NULL, NULL);
         if (!window)
         {
             glfwTerminate();
@@ -59,6 +76,8 @@ namespace PixelInventor {
         //for (int i = 0; i < nExtensions; i++)
         //    printf("%s\n", glGetStringi(GL_EXTENSIONS, i));
         
+        initGL();
+
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
@@ -83,6 +102,12 @@ namespace PixelInventor {
     }
 
     void PixelInventor::render() {
+
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        
+        glm::mat4 projection = glm::ortho(0.0f, (float)SCREEN_WIDTH * (float)((float)SCREEN_WIDTH / (float)width), 0.0f, (float)SCREEN_HEIGHT * (float)((float)SCREEN_HEIGHT / (float)height), -1.0f, 1.0f);
+        Shaders::DEFAULT.setMat4("projection", projection);
         static int i = 0;
         static double x = 0;
         i++;
@@ -94,5 +119,15 @@ namespace PixelInventor {
         
         //begin drawing
         world.render();
+    }
+
+    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+    {
+        if (action == GLFW_PRESS) {
+            Settings::buttons[key] = true;
+        }
+        if (action == GLFW_RELEASE) {
+            Settings::buttons[key] = false;
+        }
     }
 }

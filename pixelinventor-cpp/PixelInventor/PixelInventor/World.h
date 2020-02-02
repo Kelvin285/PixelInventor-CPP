@@ -11,8 +11,8 @@ namespace PixelInventor {
 		void update();
 		void render();
 
-		Chunk getChunk(glm::vec2 pos);
-		bool doesChunkExist(glm::vec2 pos);
+		Chunk getChunk(int x, int y);
+		bool doesChunkExist(int x, int y);
 
 		std::map<glm::vec2, Chunk> getChunks();
 	private:

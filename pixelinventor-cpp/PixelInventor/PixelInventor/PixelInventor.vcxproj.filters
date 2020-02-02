@@ -43,6 +43,9 @@
     <Filter Include="Source Files\main\PixelInventor\Util">
       <UniqueIdentifier>{3cef26b7-d9b7-46a1-92a4-6f29717bfcbe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\main\PixelInventor\Game\Renderer\Shaders">
+      <UniqueIdentifier>{f9f40ec9-548e-49a0-ae86-1cbbbfe9988b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -65,6 +68,27 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Source Files\main\PixelInventor\Game\World</Filter>
+    </ClCompile>
+    <ClCompile Include="FileManager.cpp">
+      <Filter>Source Files\main\PixelInventor\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Renderer\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source Files\main\PixelInventor\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Renderer\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Constants.cpp">
+      <Filter>Source Files\main\PixelInventor\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +117,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HashMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

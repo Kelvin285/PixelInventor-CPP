@@ -2,16 +2,12 @@
 #include <gl/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "Constants.h"
+#include "Textures.h"
+#include <glm/glm.hpp>
 namespace PixelInventor {
-	float positions[6] = {
-	   -0.5f, -0.5f,
-		0.0f,  0.5f,
-		0.5f, -0.5f
-	};
+	
 	void ChunkRenderer::renderChunk(Chunk* chunk) {
-		glBindBuffer(GL_ARRAY_BUFFER, chunk->getBuffer());
-		glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
-		
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		Constants::spriteRenderer->DrawSprite(Textures::TILE_DIRT, Textures::TEMPLATE_MANMADE, Textures::TILE_GRASS, glm::vec2(64, 0), glm::vec2(64, 64), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec4(0.0, 0.0, 1.0, 1.0), glm::vec4(0.0, 0.0, 1.0 / 21.0, 1.0), glm::vec4(0, 0, 1.0 / 21.0, 1));
 	}
 }
