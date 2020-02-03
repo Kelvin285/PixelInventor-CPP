@@ -29,5 +29,5 @@ void main() {
 		else
 		FragColor = texture(uTex, TexCoord) * vec4(spriteColor, 1.0);
 	}
-	
+
 }

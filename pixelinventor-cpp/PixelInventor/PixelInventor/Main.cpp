@@ -6,8 +6,11 @@
 #include <unordered_map>
 #include <glm/glm.hpp>
 #include "FileManager.h"
+#include "HashMap.h";
+#include "Chunk.h";
 int main(void)
 {
+    
     PixelInventor::PixelInventor p;
     
     return 0;

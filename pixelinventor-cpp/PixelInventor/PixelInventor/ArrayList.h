@@ -29,7 +29,7 @@ namespace PixelInventor {
 			return list[i];
 		}
 		bool contains(T t) {
-			for (int i = 0; i < size(); i++) {
+			for (unsigned int i = 0; i < size(); i++) {
 				if (get(i) == t) {
 					return true;
 				}
@@ -38,7 +38,7 @@ namespace PixelInventor {
 		}
 		int indexof(T t) {
 			if (size() == 0) return -1;
-			for (int i = 0; i < size(); i++) {
+			for (unsigned int i = 0; i < size(); i++) {
 				T a = list[i];
 				if (a == t) {
 					return i;

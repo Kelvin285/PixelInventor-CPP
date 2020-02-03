@@ -1,10 +1,14 @@
 #pragma once
 #include "Tile.h"
-#include <vector>
+#include "ArrayList.h"
 namespace PixelInventor {
 	class Tiles {
 	public:
-		static std::vector<Tile> tiles;
+		static ArrayList<Tile> tiles;
+
+		static Tile AIR;
+		static Tile DIRT;
+
 		static void run();
 	};
 }

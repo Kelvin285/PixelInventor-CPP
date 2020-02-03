@@ -90,6 +90,18 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\main\PixelInventor\Game\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="MathFunc.cpp">
+      <Filter>Source Files\main\PixelInventor\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiTile.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="GroundTile.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles.cpp">
+      <Filter>Source Files\main\PixelInventor\Game\Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PixelInventor.h">
@@ -138,6 +150,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathFunc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

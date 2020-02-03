@@ -159,7 +159,10 @@
     <ClCompile Include="ChunkRenderer.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="FileManager.cpp" />
+    <ClCompile Include="GroundTile.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MathFunc.cpp" />
+    <ClCompile Include="MultiTile.cpp" />
     <ClCompile Include="PixelInventor.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Shaders.cpp" />
@@ -167,6 +170,7 @@
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="Tiles.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +181,7 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="HashMap.h" />
+    <ClInclude Include="MathFunc.h" />
     <ClInclude Include="PixelInventor.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Shader.h" />

@@ -1,10 +1,18 @@
 #pragma once
+#include <map>
 #include <unordered_map>
 #include <iostream>
+#include "ArrayList.h"
+
 
 namespace PixelInventor {
 	template <typename A, typename B>
 	class HashMap {
+
+	private:
+		std::unordered_map<A, B> map;
+		ArrayList<A> keys;
+	
 	public:
 		HashMap() {
 			
@@ -14,8 +22,7 @@ namespace PixelInventor {
 		}
 
 		void put(A a, B b) {
-			std::pair<A, B> p(a, b);
-			map.insert(p);
+			map.insert(std::make_pair(a, b));
 			keys.add(a);
 		}
 
@@ -24,11 +31,18 @@ namespace PixelInventor {
 		}
 
 		B get(A a) {
-			return map.at(a);
+			if (map.find(a) != map.end()) {
+				return map[a];
+			}
+			return nullptr;
 		}
 
 		ArrayList<A> getKeySet() {
 			return keys.asList();
+		}
+
+		bool containsKey(A a) {
+			return keys.contains(a);
 		}
 
 		void clear() {
@@ -42,11 +56,9 @@ namespace PixelInventor {
 		}
 
 		unsigned int size() {
-			return sizeof(map.count);
+			return keys.size();
 		}
 
-	private:
-		ArrayList<A> keys;
-		std::unordered_map<A, B> map;
+	
 	};
 }

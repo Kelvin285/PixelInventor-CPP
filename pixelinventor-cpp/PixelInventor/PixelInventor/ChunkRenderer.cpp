@@ -5,9 +5,42 @@
 #include "Constants.h"
 #include "Textures.h"
 #include <glm/glm.hpp>
+#include "Tile.h"
+#include "Camera.h"
 namespace PixelInventor {
 	
 	void ChunkRenderer::renderChunk(Chunk* chunk) {
-		Constants::spriteRenderer->DrawSprite(Textures::TILE_DIRT, Textures::TEMPLATE_MANMADE, Textures::TILE_GRASS, glm::vec2(64, 0), glm::vec2(64, 64), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec4(0.0, 0.0, 1.0, 1.0), glm::vec4(0.0, 0.0, 1.0 / 21.0, 1.0), glm::vec4(0, 0, 1.0 / 21.0, 1));
+		double w = 21.0;
+		for (unsigned int x = 0; x < Chunk::SIZE; x++) {
+			for (unsigned int y = 0; y < Chunk::SIZE; y++) {
+				renderTile(chunk, x, y);
+			}
+		}
+	}
+	void ChunkRenderer::renderTile(Chunk* chunk, int x, int y) {
+		Tile* tile = chunk->tiles[x][y];
+		if (tile->isVisible() == false) return;
+		double X = x * (int)Constants::tilesize + chunk->getX() * (int)Constants::tilesize * (int)Chunk::SIZE - Camera::X;
+		double Y = y * (int)Constants::tilesize + chunk->getY() * (int)Constants::tilesize * (int)Chunk::SIZE - Camera::Y;
+		glm::vec2 state = chunk->states[x][y];
+		glm::vec2 mstate = chunk->states[x][y];
+		double w = 1.0 / 21.0;
+		double h = 1.0;
+
+		double w2 = 1.0 / 21.0;
+		double h2 = 1.0;
+		if (tile->isMulti()) {
+			MultiTile* multi = (MultiTile*)tile;
+			mstate = multi->getTile(x, y);
+			w2 = 1.0 / multi->getSizeX();
+			h2 = 1.0 / multi->getSizeY();
+		}
+		unsigned int overlay = Textures::TILE_AIR;
+		if (tile->getOverlay() != 0) {
+			overlay = tile->getOverlay();
+		}
+		
+		Constants::spriteRenderer->DrawSprite(tile->getTexture(), tile->getTilingTemplate(), tile->getOverlay(), glm::vec2(X, Y), glm::vec2(Constants::tilesize, Constants::tilesize), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec4(mstate.x * w2, mstate.y * h2, w2, h2), glm::vec4(state.x * w, state.y * h, w, h), glm::vec4(state.x * w, state.y * h, w, h));
+
 	}
 }

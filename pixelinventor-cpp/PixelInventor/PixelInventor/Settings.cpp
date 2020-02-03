@@ -9,6 +9,8 @@ namespace PixelInventor {
 	int Settings::DOWN = GLFW_KEY_S;
 	int Settings::LEFT = GLFW_KEY_A;
 	int Settings::RIGHT = GLFW_KEY_D;
+	int Settings::ZOOM_IN = GLFW_KEY_EQUAL;
+	int Settings::ZOOM_OUT = GLFW_KEY_MINUS;
 
 	bool Settings::clouds = false;
 	bool Settings::distortion = false;
