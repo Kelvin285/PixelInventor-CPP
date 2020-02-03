@@ -27,21 +27,29 @@ namespace PixelInventor {
 		}
 		I++;
 		if (I > 2) {
-			loadedChunks.clear();
 			I = 0;
 			const int X = (int)(Camera::X / (Chunk::SIZE * Constants::tilesize)) + 7;
 			const int Y = (int)(Camera::Y / (Chunk::SIZE * Constants::tilesize)) + 4;
 
 			glm::vec2 pt;
 
-			for (int x = X + -Camera::VIEW_X; x < X + Camera::VIEW_X + 1; x++) {
-				for (int y = Y + -Camera::VIEW_Y; y < Y + Camera::VIEW_Y + 1; y++) {
+			for (int x = X + -Camera::VIEW_X * 2; x < X + Camera::VIEW_X * 2 + 1; x++) {
+				for (int y = Y + -Camera::VIEW_Y * 2; y < Y + Camera::VIEW_Y * 2 + 1; y++) {
 					pt.x = x;
 					pt.y = y;
-					if (!loadedChunks.containsKey(std::to_string(x) + "," + std::to_string(y))) {
-						addChunk(pt);
-						reshapeChunk(pt);
+
+					if (MathFunc::abs(x - X) <= Camera::VIEW_X && MathFunc::abs(y - Y) <= Camera::VIEW_Y) {
+						if (!loadedChunks.containsKey(std::to_string(x) + "," + std::to_string(y))) {
+							addChunk(pt);
+							reshapeChunk(pt);
+						}
 					}
+					else {
+						if (loadedChunks.containsKey(std::to_string(x) + "," + std::to_string(y))) {
+							loadedChunks.remove(std::to_string(x) + "," + std::to_string(y));
+						}
+					}
+					
 				}
 			}
 			

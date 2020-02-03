@@ -1,13 +1,51 @@
-﻿  PixelInventor.cpp
+﻿  Chunk.cpp
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(109,30): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(112,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(112,27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(113,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(113,27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(114,37): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(114,27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(130,14): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Chunk.cpp(131,14): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  ChunkGenerator.cpp
+  ChunkRenderer.cpp
+  Constants.cpp
+  Main.cpp
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Main.cpp(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\Main.cpp(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  MathFunc.cpp
+  PixelInventor.cpp
 C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\PixelInventor.cpp(26,33): warning C4150: deletion of pointer to incomplete type 'GLFWwindow'; no destructor called
 C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\dependencies\GLFW\include\GLFW\glfw3.h(1157): message : see declaration of 'GLFWwindow'
-C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\PixelInventor.cpp(131,76): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\PixelInventor.cpp(131,163): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\PixelInventor.cpp(133,82): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\PixelInventor.cpp(133,192): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  World.cpp
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\World.cpp(38,13): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\World.cpp(39,13): warning C4244: '=': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\World.cpp(41,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\PixelInventor\World.cpp(41,68): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  2 of 860 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  6 of 949 functions ( 0.6%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    7 functions had inline decision re-evaluated but remain unchanged
+    8 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\Release\vc120.pdb'; linking object as if no debug info
   PixelInventor.vcxproj -> C:\Users\lolga\Documents\GitHub\PixelInventor-CPP\pixelinventor-cpp\PixelInventor\Release\PixelInventor.exe

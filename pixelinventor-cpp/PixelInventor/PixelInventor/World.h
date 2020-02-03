@@ -2,9 +2,13 @@
 #include <glm/glm.hpp>
 #include "Chunk.h"
 #include "Camera.h"
+#include "ChunkGenerator.h"
+#include "Constants.h"
 namespace PixelInventor {
 	class World {
 	public:
+		ChunkGenerator chunkGenerator = ChunkGenerator(this);
+
 		World();
 		~World();
 
@@ -21,10 +25,9 @@ namespace PixelInventor {
 		glm::vec3 getSkyColor() {
 			glm::vec3 skyColor = glm::vec3(64.0 / 255.0, 144.0 / 255.0, 203.0 / 255.0);
 			float RY = Camera::Y;
-			int space_height = 10000;
 			
-			if (RY > space_height) {
-				float val = (float)((1.0 / 255) * (RY - space_height) * 0.1);
+			if (RY > Constants::SPACE) {
+				float val = (float)((1.0 / 255) * (RY - Constants::SPACE) * 0.1);
 				skyColor.r -= val;
 				if (skyColor.r < 0) skyColor.r = 0;
 				

@@ -38,6 +38,19 @@ namespace PixelInventor {
 			return x < min ? min : x > max ? max : x;
 		}
 
+		static int toStaticZoomedCoordsY(int x) {
+			double mx = x - Constants::SCREEN_HEIGHT / 2;
+			mx /= (Camera::zoom + 1);
+			mx += Constants::SCREEN_HEIGHT / 2;
+			return (int)mx;
+		}
+		static int toStaticZoomedCoordsX(int x) {
+			double mx = x - Constants::SCREEN_WIDTH / 2;
+			mx /= (Camera::zoom + 1);
+			mx += Constants::SCREEN_WIDTH / 2;
+			return (int)mx;
+		}
+
 		static int toZoomedCoordsY(int x) {
 			int width, height;
 			glfwGetWindowSize(Constants::window, &width, &height);

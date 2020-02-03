@@ -7,7 +7,9 @@ namespace PixelInventor {
 		static ArrayList<Tile> tiles;
 
 		static Tile AIR;
-		static Tile DIRT;
+		static GroundTile DIRT;
+		static GroundTile GRASS;
+		static GroundTile PURPLE_GRASS;
 
 		static void run();
 	};

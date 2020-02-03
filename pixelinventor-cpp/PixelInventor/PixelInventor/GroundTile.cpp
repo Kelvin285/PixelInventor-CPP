@@ -2,6 +2,7 @@
 #include "Chunk.h"
 #include "Tiles.h"
 #include "Textures.h"
+#include <iostream>
 namespace PixelInventor {
 	GroundTile::GroundTile(std::string location, unsigned int texture, int sizeX, int sizeY) {
 		this->location = location;
@@ -12,11 +13,11 @@ namespace PixelInventor {
 		this->overlay = Textures::TILE_AIR;
 		this->tileTemplate = Textures::TEMPLATE_SQUARED;
 		this->visible = true;
+		this->ground = true;
 	}
-
+	
 	glm::vec2 GroundTile::getShape(Chunk* chunk, int x, int y) {
 		int state = 0;
-
 		if (chunk->getTile(x, y + 1) != &Tiles::AIR) {
 			state += 1;
 		}

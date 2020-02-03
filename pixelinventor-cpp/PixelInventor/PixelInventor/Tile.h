@@ -9,11 +9,11 @@ namespace PixelInventor {
 		std::string location;
 		unsigned int texture;
 		unsigned int overlay;
-		glm::vec3 light_value;
+		glm::vec3 light_value = glm::vec3(0, 0, 0);
 		unsigned int tileTemplate;
 		bool visible;
 		bool multi;
-
+		bool ground;
 		Tile() {}
 		Tile(std::string location, unsigned int texture);
 		~Tile();
@@ -74,7 +74,7 @@ namespace PixelInventor {
 			this->tileTemplate = temp;
 		}
 
-		glm::vec2 getShape(Chunk* chunk, int x, int y);
+		virtual glm::vec2 getShape(Chunk* chunk, int x, int y);
 
 		void setMulti(bool multi) {
 			this->multi = multi;
@@ -98,13 +98,13 @@ namespace PixelInventor {
 
 		glm::vec2 getTile(int x, int y);
 		
-		
 		int sizeX, sizeY;
 		
 	};
 
 	class GroundTile : public MultiTile {
 	public:
+		GroundTile() {}
 		GroundTile(std::string location, unsigned int texture, int sizeX, int sizeY);
 
 		 float getNaturalDistortion() {

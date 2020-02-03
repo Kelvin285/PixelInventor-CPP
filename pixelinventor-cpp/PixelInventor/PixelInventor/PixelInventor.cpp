@@ -14,7 +14,7 @@
 using namespace std;
 namespace PixelInventor {
     void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
+    void size_callback(GLFWwindow* window, int width, int height);
 	PixelInventor::PixelInventor() {       
         start();
 	}
@@ -29,7 +29,7 @@ namespace PixelInventor {
     void PixelInventor::initGL() {
         Textures::load();
         Shaders::init();
-        glm::mat4 projection = glm::ortho(0.0f, (float)SCREEN_WIDTH, 0.0f, (float)SCREEN_HEIGHT, -1.0f, 1.0f);
+        glm::mat4 projection = glm::ortho(0.0f, (float)Constants::SCREEN_WIDTH, 0.0f, (float)Constants::SCREEN_HEIGHT, -1.0f, 1.0f);
         Shaders::DEFAULT.setMat4("projection", projection);
         Shaders::DEFAULT.setInt("uTex", 0);
         Shaders::DEFAULT.setInt("templateTex", 1);
@@ -37,6 +37,7 @@ namespace PixelInventor {
         Constants::spriteRenderer = new SpriteRenderer(Shaders::DEFAULT);
         Tiles::run();
         glfwSetKeyCallback(Constants::window, key_callback);
+        glfwSetWindowSizeCallback(Constants::window, size_callback);
     }
 	void PixelInventor::start() {
         
@@ -48,7 +49,7 @@ namespace PixelInventor {
        
 
         /* Create a windowed mode window and its OpenGL context */
-        Constants::window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "PixelInventor", NULL, NULL);
+        Constants::window = glfwCreateWindow(Constants::SCREEN_WIDTH, Constants::SCREEN_HEIGHT, "PixelInventor", NULL, NULL);
         if (!Constants::window)
         {
             glfwTerminate();
@@ -101,6 +102,7 @@ namespace PixelInventor {
 	}
 
     void PixelInventor::update() {
+        std::cout << Camera::Y << std::endl;
         float speed = 4.0f;
         if (Settings::isKeyDown(Settings::UP)) {
             Camera::Y += speed;
@@ -128,7 +130,7 @@ namespace PixelInventor {
     }
 
     void PixelInventor::render() {
-        glm::mat4 projection = glm::ortho((float)MathFunc::toZoomedCoordsX(0.0), (float)MathFunc::toZoomedCoordsX(SCREEN_WIDTH), (float)MathFunc::toZoomedCoordsY(0.0), (float)MathFunc::toZoomedCoordsY(SCREEN_HEIGHT), -1.0f, 2.0f);
+        glm::mat4 projection = glm::ortho((float)MathFunc::toStaticZoomedCoordsX(0.0), (float)MathFunc::toStaticZoomedCoordsX(Constants::SCREEN_WIDTH), (float)MathFunc::toStaticZoomedCoordsY(0.0), (float)MathFunc::toStaticZoomedCoordsY(Constants::SCREEN_HEIGHT), -1.0f, 2.0f);
         Shaders::DEFAULT.setMat4("projection", projection);
         
         static int i = 0;
@@ -139,7 +141,6 @@ namespace PixelInventor {
         glClear(GL_COLOR_BUFFER_BIT);
         glClearColor(skyColor.r, skyColor.g, skyColor.b, 1.0);
         glLoadIdentity();
-        
         //begin drawing
         world.render();
     }
@@ -155,5 +156,9 @@ namespace PixelInventor {
             }
         }
         
+    }
+
+    void size_callback(GLFWwindow* window, int width, int height) {
+        glViewport(0, 0, width, height);
     }
 }

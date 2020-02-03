@@ -21,7 +21,7 @@ namespace PixelInventor {
 		}
 
 		void reshape();
-		void recalulateNextLights();
+		void recalculateNextLights();
 		void recalculateLights();
 		glm::vec3 getRenderLight(int x, int y);
 		glm::vec3 getLight(int x, int y);
@@ -31,9 +31,9 @@ namespace PixelInventor {
 		glm::vec2 getState(int x, int y);
 		void setState(int x, int y, glm::vec2 state);
 		Tile* getTile(int x, int y);
-		void setTile(int x, int y, Tile tile);
+		void setTile(int x, int y, Tile* tile);
 
-		static const unsigned int SIZE = 4;
+		static const int SIZE = 4;
 
 		int X;
 		int Y;

@@ -42,7 +42,7 @@ namespace PixelInventor {
 		}
 
 		bool containsKey(A a) {
-			return keys.contains(a);
+			return map.find(a) != map.end();
 		}
 
 		void clear() {
