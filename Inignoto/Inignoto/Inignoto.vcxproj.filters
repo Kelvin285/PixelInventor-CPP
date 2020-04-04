@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Inignoto">
+      <UniqueIdentifier>{185726db-e6ec-4e5e-8d94-3d7433829d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\Resources">
+      <UniqueIdentifier>{420eb483-b370-4ed1-9645-7ee78b44acea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\Client">
+      <UniqueIdentifier>{596a4d1b-8a37-4dd0-8186-fa1dc5ef740c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\Client\Events">
+      <UniqueIdentifier>{bba1252d-cf16-4ea7-8ef7-b9eb058865ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assets">
+      <UniqueIdentifier>{23cbe87c-a8bb-46f4-95f9-7cf6cde6ce47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assets\Inignoto">
+      <UniqueIdentifier>{6c785edb-27da-4f78-860a-27037a62989d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\assets\Inignoto\shaders">
+      <UniqueIdentifier>{a399d22c-f5f1-4ed9-bea7-653238ec3a16}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inignoto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files\Inignoto\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Constants.cpp">
+      <Filter>Source Files\Inignoto\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Events.cpp">
+      <Filter>Source Files\Inignoto\Client\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Source Files\Inignoto\Client\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Inignoto.cpp">
+      <Filter>Source Files\Inignoto</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\Inignoto\shaders\fragment.glsl">
+      <Filter>Source Files\assets\Inignoto\shaders</Filter>
+    </None>
+    <None Include="assets\Inignoto\shaders\vertex.glsl">
+      <Filter>Source Files\assets\Inignoto\shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

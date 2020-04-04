@@ -1,0 +1,4 @@
+https://vulkan-tutorial.com/en/Vertex_buffers/Vertex_buffer_creation
+
+vulkan tutorial part:
+ The typeFilter parameter will be used to specify the bit field of memory types that are suitable. That means that we can find the index of a suitable memory type by simply iterating over them and checking if the corresponding bit is set to 1.
