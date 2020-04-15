@@ -1,4 +1,5 @@
 #include "Events.h"
+#include "Settings.h"
 
 float Events::w;
 float Events::left;
@@ -6,7 +7,15 @@ float Events::height;
 
 void Events::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	//TODO: Add key presses to settings
+	if (action == GLFW_PRESS) {
+		Settings::keys[key] = true;
+		Settings::pressedKey[key] = true;
+	}
+	if (action == GLFW_RELEASE) {
+		Settings::keys[key] = false;
+		Settings::pressedKey[key] = false;
+
+	}
 }
 
 void Events::mousePos(GLFWwindow* window, double x, double y)
@@ -20,8 +29,8 @@ void Events::mouseClick(GLFWwindow* window, int button, int press, int undefined
 	//if (GuiRenderer::currentScreen == 0)
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	Mouse::locked = true;
-
-	//TODO: add mouse clicks to settings
+	Settings::buttons[button] = press == 1;
+	Settings::pressedButton[button] = press == 1;
 }
 
 void Events::windowFocus(GLFWwindow* window, int focused)

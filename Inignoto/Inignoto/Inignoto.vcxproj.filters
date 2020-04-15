@@ -34,6 +34,21 @@
     <Filter Include="Source Files\assets\Inignoto\shaders">
       <UniqueIdentifier>{a399d22c-f5f1-4ed9-bea7-653238ec3a16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Inignoto\Client\Textures">
+      <UniqueIdentifier>{fbda7ad7-0456-4fe6-835a-62c09888b8fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\world">
+      <UniqueIdentifier>{d7baa789-b61b-45a0-878a-a7d63ef38e0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\world\chunk">
+      <UniqueIdentifier>{656d2c5d-bdba-42a7-8f96-565e54327508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\settings">
+      <UniqueIdentifier>{f358c7f8-fcbe-4633-a2ef-de9a44f5814a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\Client\rendering">
+      <UniqueIdentifier>{79b2be80-2995-4db3-9e5a-546be5fed9bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -54,6 +69,39 @@
     <ClInclude Include="MathHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TilePos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TileData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSetting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Translation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FPSCounter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -70,6 +118,42 @@
     </ClCompile>
     <ClCompile Include="Inignoto.cpp">
       <Filter>Source Files\Inignoto</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source Files\Inignoto\Client\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files\Inignoto</Filter>
+    </ClCompile>
+    <ClCompile Include="VBO.cpp">
+      <Filter>Source Files\Inignoto\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="TilePos.cpp">
+      <Filter>Source Files\Inignoto\world</Filter>
+    </ClCompile>
+    <ClCompile Include="TileData.cpp">
+      <Filter>Source Files\Inignoto\world</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSetting.cpp">
+      <Filter>Source Files\Inignoto\settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings.cpp">
+      <Filter>Source Files\Inignoto\settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Translation.cpp">
+      <Filter>Source Files\Inignoto\settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Inignoto\Client\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Inignoto\Client</Filter>
+    </ClCompile>
+    <ClCompile Include="FPSCounter.cpp">
+      <Filter>Source Files\Inignoto\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiRenderer.cpp">
+      <Filter>Source Files\Inignoto\Client\rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

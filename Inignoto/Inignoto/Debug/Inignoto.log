@@ -1,0 +1,6 @@
+﻿  GuiRenderer.cpp
+C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Inignoto\MathHelper.h(42,1): warning C4005: 'max': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\minmax.h(13): message : see previous definition of 'max'
+C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Inignoto\MathHelper.h(43,1): warning C4005: 'min': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\minmax.h(17): message : see previous definition of 'min'
+  Inignoto.vcxproj -> C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Debug\Inignoto.exe

@@ -1,6 +1,16 @@
 #pragma once
 #define GLFW_INCLUDE_VULKAN
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include "Translation.h"
+#include "Settings.h"
+#include "Camera.h"
+#include "Input.h"
+#include "FPSCounter.h"
+
+#include <chrono>
 
 #include <iostream>
 #include <stdexcept>
@@ -17,19 +27,41 @@
 #include <minmax.h>
 #include <math.h>
 #include "MathHelper.h"
+#include "Textures.h"
+#include "VBO.h"
+#include <set>
+#include "GuiRenderer.h"
 
 class Inignoto
 {
 public:
 	static Inignoto* game;
-	
+	VkDevice device;
+	std::vector<VkImage> swapChainImages;
+	VkDescriptorSetLayout descriptorSetLayout;
+
 	void run();
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+	VkCommandBuffer beginSingleTimeCommands();
+	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
+
+	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+	void addVBO(VBO* vbo);
+	void removeVBO(VBO* vbo);
+
+	VBO testVBO;
+	VBO testVBO2;
+
+	GuiRenderer guiRenderer;
+
 private:
-	const std::vector<Utils::Vertex> vertices = {
-		{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-		{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-		{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
-	};
+
+	bool refreshView;
 
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -49,17 +81,22 @@ private:
 
 	VkInstance vk_instance;
 	VkDebugUtilsMessengerEXT debugMessenger;
-	VkDevice device;
 	VkQueue graphicsQueue;
 	VkSurfaceKHR surface;
 	VkQueue presentQueue;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VkSwapchainKHR swapChain;
 	VkRenderPass renderPass;
+
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 	VkCommandPool commandPool;
-	VkBuffer vertexBuffer;
+
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
+
+	std::set<VBO*> vbos;
 
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -68,7 +105,6 @@ private:
 
 	size_t currentFrame = 0;
 
-	std::vector<VkImage> swapChainImages;
 	VkFormat swapChainImageFormat;
 	VkExtent2D swapChainExtent;
 
@@ -76,6 +112,7 @@ private:
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 	std::vector<VkCommandBuffer> commandBuffers;
 	
+
 	const std::vector<const char*> validationLayers = {
 		"VK_LAYER_KHRONOS_validation"
 	};
@@ -87,7 +124,7 @@ private:
 	#ifdef NDEBUG
 		const bool enableValidationLayers = false;
 	#else
-		const bool enableValidationLayers = false;
+		const bool enableValidationLayers = true;
 	#endif
 
 	void createInstance();
@@ -96,9 +133,19 @@ private:
 
 	void initVulkan();
 
-	void createVertexBuffer();
+	void createDepthResources();
 
-	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	bool hasStencilComponent(VkFormat format);
+	
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
+
+	VkFormat findDepthFormat();
+
+	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+
+	void createVertexBuffer();
 
 	void recreateSwapChain();
 
@@ -115,6 +162,9 @@ private:
 	void createRenderPass();
 
 	void createGraphicsPipeline();
+
+	void createDescriptorSetLayout();
+
 
 	void createShader(std::string modid, std::string vertex, std::string fragment);
 	VkShaderModule createShaderModule(const std::vector<char>& code);
@@ -144,11 +194,19 @@ private:
 
 	void setupDebugMessenger();
 
+	std::vector<const char*> getRequiredExtensions();
+
 	VkResult createDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 
 	void loop();
 
+	void render();
+
 	void drawFrame();
+
+	void tick();
+
+	void updateUniformBuffer(uint32_t imageIndex);
 
 	void dispose();
 
@@ -164,16 +222,5 @@ private:
 
 };
 
-int main() {
-	Inignoto inignoto;
 
-	try {
-		inignoto.run();
-	}
-	catch (const std::exception & e) {
-		std::cerr << e.what() << std::endl;
-		return EXIT_FAILURE;
-	}
-	return EXIT_SUCCESS;
-}
-
+//I'm watching you
