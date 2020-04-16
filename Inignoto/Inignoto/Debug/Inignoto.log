@@ -1,6 +1,7 @@
-﻿  GuiRenderer.cpp
-C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Inignoto\MathHelper.h(42,1): warning C4005: 'max': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\minmax.h(13): message : see previous definition of 'max'
-C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Inignoto\MathHelper.h(43,1): warning C4005: 'min': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\minmax.h(17): message : see previous definition of 'min'
+﻿  Inignoto.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\include32\GLFW\glfw3.h(123): message : see previous definition of 'APIENTRY'
+C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Inignoto\Inignoto.cpp(435,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Inignoto\Inignoto.cpp(1418,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Inignoto\Inignoto.cpp(150): warning C4715: 'Inignoto::findSupportedFormat': not all control paths return a value
   Inignoto.vcxproj -> C:\Users\lolga\Desktop\coding\Inignoto-cpp\project\Inignoto\Debug\Inignoto.exe

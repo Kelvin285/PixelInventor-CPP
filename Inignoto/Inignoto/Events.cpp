@@ -1,5 +1,6 @@
 #include "Events.h"
 #include "Settings.h"
+#include "Inignoto.h"
 
 float Events::w;
 float Events::left;
@@ -26,9 +27,11 @@ void Events::mousePos(GLFWwindow* window, double x, double y)
 
 void Events::mouseClick(GLFWwindow* window, int button, int press, int undefined)
 {
-	//if (GuiRenderer::currentScreen == 0)
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	Mouse::locked = true;
+	if (Inignoto::game->guiRenderer.getOpenScreen() != nullptr) {
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		Mouse::locked = true;
+	}
+	
 	Settings::buttons[button] = press == 1;
 	Settings::pressedButton[button] = press == 1;
 }

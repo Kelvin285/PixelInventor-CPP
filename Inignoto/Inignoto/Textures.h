@@ -34,11 +34,10 @@ struct TextureSpace {
 
 public :
 	std::array<glm::vec2, 4> getTextureCoords(int IMAGE_WIDTH, int IMAGE_HEIGHT, float u, float v, float w, float h) {
-		float mul = 10.5f;
 		float u1 = ((float)X + u * (float)W) / (float)IMAGE_WIDTH;
-		float v1 = ((float)Y + v * (float)H * mul) / (float)IMAGE_HEIGHT;
+		float v1 = ((float)Y + v * (float)H) / (float)IMAGE_HEIGHT;
 		float u2 = ((float)X + w * (float)W) / (float)IMAGE_WIDTH;
-		float v2 = ((float)Y + h * (float)H * mul) / (float)IMAGE_HEIGHT;
+		float v2 = ((float)Y + h * (float)H) / (float)IMAGE_HEIGHT;
 		std::array<glm::vec2, 4> texCoords = {
 		glm::vec2(u1, v1),
 		glm::vec2(u1, v2),

@@ -32,6 +32,11 @@
 #include <set>
 #include "GuiRenderer.h"
 
+struct ModifyVBO {
+	VBO* vbo;
+	int TTL = 20;
+};
+
 class Inignoto
 {
 public:
@@ -51,8 +56,8 @@ public:
 	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
-	void addVBO(VBO* vbo);
-	void removeVBO(VBO* vbo);
+	void addVBO(VBO* vbo, bool now = false);
+	void removeVBO(VBO* vbo, bool now = false);
 
 	VBO testVBO;
 	VBO testVBO2;
@@ -97,6 +102,8 @@ private:
 	VkImageView depthImageView;
 
 	std::set<VBO*> vbos;
+	std::vector<ModifyVBO> removeVbos;
+	std::vector<ModifyVBO> addVbos;
 
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -147,13 +154,13 @@ private:
 
 	void createVertexBuffer();
 
-	void recreateSwapChain();
-
 	void cleanupSwapChain();
 
 	void createSyncObjects();
 
 	void createCommandBuffers();
+
+	void modifyCommandBuffers(size_t i);
 
 	void createCommandPool();
 
@@ -165,6 +172,7 @@ private:
 
 	void createDescriptorSetLayout();
 
+	void recreateSwapChain();
 
 	void createShader(std::string modid, std::string vertex, std::string fragment);
 	VkShaderModule createShaderModule(const std::vector<char>& code);

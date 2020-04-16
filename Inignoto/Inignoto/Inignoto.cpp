@@ -291,18 +291,22 @@ void Inignoto::transitionImageLayout(VkImage image, VkFormat format, VkImageLayo
 	endSingleTimeCommands(commandBuffer);
 }
 
-void Inignoto::addVBO(VBO* vbo) {
+void Inignoto::addVBO(VBO* vbo, bool now) {
 	if (vbos.count(vbo) == 0) {
-		vbos.insert(vbo);
-		refreshView = true;
+		ModifyVBO addition = {};
+		addition.vbo = vbo;
+		addition.TTL = swapChainImages.size() + 5;
+		addVbos.push_back(addition);
 	}
 }
 
-void Inignoto::removeVBO(VBO* vbo) {
+void Inignoto::removeVBO(VBO* vbo, bool now) {
 	if (vbos.count(vbo) != 0) {
-		vbo->dispose();
 		vbos.erase(vbo);
-		refreshView = true;
+		ModifyVBO removal = {};
+		removal.vbo = vbo;
+		removal.TTL = swapChainImages.size() + 5;
+		removeVbos.push_back(removal);
 	}
 }
 
@@ -437,6 +441,64 @@ void Inignoto::createSyncObjects() {
 	}
 }
 
+void Inignoto::modifyCommandBuffers(size_t i) {
+	VkCommandBufferAllocateInfo allocInfo = {};
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.commandPool = commandPool;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandBufferCount = 1;
+
+	if (vkAllocateCommandBuffers(device, &allocInfo, &commandBuffers[i]) != VK_SUCCESS) {
+		std::cout << "failed to allocate command buffers!" << std::endl;
+		return;
+		//throw std::runtime_error("failed to allocate command buffers!");
+	}
+
+	VkCommandBufferBeginInfo beginInfo = {};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+	if (vkBeginCommandBuffer(commandBuffers[i], &beginInfo) != VK_SUCCESS) {
+		throw std::runtime_error("failed to begin recording command buffer!");
+	}
+
+	VkRenderPassBeginInfo renderPassInfo = {};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassInfo.renderPass = renderPass;
+	renderPassInfo.framebuffer = swapChainFramebuffers[i];
+	renderPassInfo.renderArea.offset = { 0, 0 };
+	renderPassInfo.renderArea.extent = swapChainExtent;
+
+	std::array<VkClearValue, 2> clearValues = {};
+	clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
+	clearValues[1].depthStencil = { 1.0f, 0 };
+
+	renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
+	renderPassInfo.pClearValues = clearValues.data();
+
+	vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+	vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+
+	for (auto vbo : vbos) {
+		if (vbo->visible == false) continue;
+		VkBuffer vertexBuffers[] = { vbo->vertexBuffer };
+		VkDeviceSize offsets[] = { 0 };
+		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+
+		vkCmdBindIndexBuffer(commandBuffers[i], vbo->indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+		vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &vbo->descriptorSets[i], 0, nullptr);
+
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(vbo->indices.size()), 1, 0, 0, 0);
+	}
+
+	vkCmdEndRenderPass(commandBuffers[i]);
+
+	if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {
+		throw std::runtime_error("failed to record command buffer!");
+	}
+}
+
 void Inignoto::createCommandBuffers() {
 	commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -477,6 +539,7 @@ void Inignoto::createCommandBuffers() {
 		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
 		for (auto vbo : vbos) {
+			if (vbo->visible == false) continue;
 			VkBuffer vertexBuffers[] = { vbo->vertexBuffer };
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
@@ -1173,7 +1236,6 @@ void Inignoto::setupDebugMessenger() {
 }
 
 int ticks = 0;
-
 void Inignoto::loop() {
 	while (!glfwWindowShouldClose(Utils::window)) {
 		tick();
@@ -1182,8 +1244,33 @@ void Inignoto::loop() {
 		if (ticks == 0) {
 			FPSCounter::startUpdate();
 
-			render();
 			drawFrame();
+			render();
+			for (size_t i = 0; i < addVbos.size(); i++) {
+				ModifyVBO* addition = &addVbos[i];
+				if (vbos.count(addition->vbo) > 0) {
+					addVbos.erase(addVbos.begin() + i);
+					continue;
+				}
+				addition->TTL -= 1;
+				if (addition->TTL <= 0) {
+					vbos.insert(addition->vbo);
+					addVbos.erase(addVbos.begin() + i);
+				}
+			}
+
+			for (size_t i = 0; i < removeVbos.size(); i++) {
+				ModifyVBO* removal = &removeVbos[i];
+				if (vbos.count(removal->vbo) > 0) {
+					removeVbos.erase(removeVbos.begin() + i);
+					continue;
+				}
+				removal->TTL -= 1;
+				if (removal->TTL <= 0) {
+					removal->vbo->dispose();
+					removeVbos.erase(removeVbos.begin() + i);
+				}
+			}
 
 			FPSCounter::updateFPS();
 			currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
@@ -1227,6 +1314,7 @@ void Inignoto::drawFrame() {
 	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
 
 	updateUniformBuffer(imageIndex);
+	modifyCommandBuffers(imageIndex);
 
 	VkSubmitInfo submitInfo = {};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -1264,8 +1352,7 @@ void Inignoto::drawFrame() {
 
 	result = vkQueuePresentKHR(presentQueue, &presentInfo);
 
-	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || Utils::framebufferResized || refreshView) {
-		refreshView = false;
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || Utils::framebufferResized) {
 		Utils::framebufferResized = false;
 		recreateSwapChain();
 	}
@@ -1284,6 +1371,7 @@ void Inignoto::updateUniformBuffer(uint32_t currentImage) {
 
 	
 	for (auto vbo : vbos) {
+		if (vbo->visible == false) continue;
 		UniformBufferObject ubo = {};
 
 		//eye position, center position, up axis
@@ -1298,11 +1386,7 @@ void Inignoto::updateUniformBuffer(uint32_t currentImage) {
 		}
 		else {
 			ubo.model = glm::mat4(1.0f);
-			ubo.model = glm::scale(ubo.model, glm::vec3(1.0f));
-			ubo.model = glm::translate(ubo.model, -glm::vec3(1, 1, 0.0f));
-			ubo.model = glm::scale(ubo.model, glm::vec3(vbo->scale.x / 1920.0f, vbo->scale.y / 1080.0f, 1.0f) * glm::vec3(1.0f, 10.0f, 1.0f));
-			ubo.model = glm::translate(ubo.model, glm::vec3(vbo->position.x, vbo->position.y, 0.0f));
-
+			
 			ubo.view = glm::lookAt(glm::vec3(0, 0, -1), glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
 			ubo.proj = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1000.0f);
 			ubo.proj[0][0] *= -1; //flips the y-coordinate so the image is rendered the right way
@@ -1336,7 +1420,7 @@ void Inignoto::dispose() {
 		vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
 		vkDestroyFence(device, inFlightFences[i], nullptr);
 	}
-
+	
 	vkDestroyCommandPool(device, commandPool, nullptr);
 
 	vkDestroyDevice(device, nullptr);

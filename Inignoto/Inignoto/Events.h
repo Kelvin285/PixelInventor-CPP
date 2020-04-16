@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include "Mouse.h"
 #include "Utils.h"
+#include "GuiRenderer.h"
 
 class Events
 {

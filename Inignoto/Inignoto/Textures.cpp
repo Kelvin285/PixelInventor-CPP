@@ -235,6 +235,9 @@ void Textures::init()
 
 		for (size_t j = 0; j < B.length(); j++) {
 			if (B[j] == ',' || j == B.length() - 1) {
+				if (j == B.length() - 1) {
+					num += B[j];
+				}
 				std::istringstream iss(num);
 				int number;
 				iss >> number;
@@ -243,7 +246,6 @@ void Textures::init()
 				else if (Y == -1) Y = number;
 				else if (W == -1) W = number;
 				else if (H == -1) H = number;
-
 				num = "";
 			}
 			else {
@@ -258,9 +260,10 @@ void Textures::init()
 		space.Y = Y;
 		space.W = W;
 		space.H = H;
+		std::cout << A << ", " << X << ", " << Y << ", " << W << ", " << H << std::endl;
 		textureSpaces.push_back(space);
 	}
-	
+	t.close();
 	Textures::TEXTURE_ATLAS = createTextureImage("Inignoto", "texture_atlas.png");
 }
 

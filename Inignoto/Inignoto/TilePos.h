@@ -7,6 +7,12 @@ class TilePos
 public:
 	int x, y, z;
 	TilePos(int x, int y, int z);
+	
+	TilePos() {
+		x = 0;
+		y = 0;
+		z = 0;
+	}
 
 	TilePos(double x, double y, double z);
 

@@ -49,6 +49,18 @@
     <Filter Include="Source Files\Inignoto\Client\rendering">
       <UniqueIdentifier>{79b2be80-2995-4db3-9e5a-546be5fed9bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Inignoto\Client\rendering\gui">
+      <UniqueIdentifier>{60636029-29bf-4674-b775-eee1ced9fd6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\tile">
+      <UniqueIdentifier>{3c151532-4b26-448c-bfb9-89b299647309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\world\chunk\generator">
+      <UniqueIdentifier>{e3194d01-bf8b-4e3f-8cdc-9dc26d5018ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Inignoto\world\structures">
+      <UniqueIdentifier>{9d102c83-086d-4ab9-b804-cd2d7ff8c95a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -102,6 +114,51 @@
     <ClInclude Include="GuiRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GuiScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InventoryScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IngameMenuScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockFace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FlatChunkGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StoneCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RayTraceResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldSaver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Utils.cpp">
@@ -153,7 +210,46 @@
       <Filter>Source Files\Inignoto\Resources</Filter>
     </ClCompile>
     <ClCompile Include="GuiRenderer.cpp">
-      <Filter>Source Files\Inignoto\Client\rendering</Filter>
+      <Filter>Source Files\Inignoto\Client\rendering\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="InventoryScreen.cpp">
+      <Filter>Source Files\Inignoto\Client\rendering\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="IngameMenuScreen.cpp">
+      <Filter>Source Files\Inignoto\Client\rendering\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source Files\Inignoto\tile</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles.cpp">
+      <Filter>Source Files\Inignoto\tile</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\Inignoto\world</Filter>
+    </ClCompile>
+    <ClCompile Include="Chunk.cpp">
+      <Filter>Source Files\Inignoto\world\chunk</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkGenerator.cpp">
+      <Filter>Source Files\Inignoto\world\chunk\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="FlatChunkGenerator.cpp">
+      <Filter>Source Files\Inignoto\world\chunk\generator</Filter>
+    </ClCompile>
+    <ClCompile Include="Structure.cpp">
+      <Filter>Source Files\Inignoto\world\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="StoneCube.cpp">
+      <Filter>Source Files\Inignoto\world\structures</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RayTraceResult.cpp">
+      <Filter>Source Files\Inignoto\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldSaver.cpp">
+      <Filter>Source Files\Inignoto\world</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

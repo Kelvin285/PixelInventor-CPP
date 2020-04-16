@@ -16,6 +16,7 @@
 #include <optional>
 #include <set>
 #include <sstream>
+#include <unordered_map>
 
 struct UniformBufferObject {
 	glm::mat4 model;
@@ -62,5 +63,50 @@ public:
 		double number;
 		iss >> number;
 		return number;
+	}
+
+	static std::unordered_map<std::string, std::string> getData(std::string str) {
+		std::unordered_map<std::string, std::string> mapdata;
+		std::string s = "";
+		for (size_t i = 0; i < str.length(); i++) {
+			if (str[i] == '\n' || i == str.length() - 1) {
+				if (i == str.length() - 1) {
+					s += str[i];
+				}
+				std::vector<std::string> data = Utils::split(s, '=');
+
+				if (data.size() == 2) {
+					bool start = false;
+					std::string a = "";
+					std::string b = "";
+
+					for (size_t j = 0; j < data[0].length(); j++) {
+						char c = data[0][j];
+						if (start && c == '"') break;
+						if (start) a += c;
+						if (c == '"') start = true;
+					}
+
+					start = false;
+
+					for (size_t j = 0; j < data[0].length(); j++) {
+						char c = data[0][j];
+						if (start && c == '"') break;
+						if (start) b += c;
+						if (c == '"') start = true;
+					}
+
+					if (!a.empty() && !b.empty()) {
+						mapdata.insert({ a, b });
+					}
+				}
+
+				s = "";
+			}
+			else {
+				s += str[i];
+			}
+		}
+		return mapdata;
 	}
 };

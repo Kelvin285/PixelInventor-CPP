@@ -33,6 +33,9 @@ void Translation::loadTranslations(std::string modid) {
 		std::string s = "";
 		for (size_t i = 0; i < str.length(); i++) {
 			if (str[i] == '\n' || i == str.length() - 1) {
+				if (i == str.length() - 1) {
+					s += str[i];
+				}
 				std::vector<std::string> data = Utils::split(s, '=');
 
 				if (data.size() == 2) {
@@ -57,8 +60,7 @@ void Translation::loadTranslations(std::string modid) {
 					}
 
 					if (!a.empty() && !b.empty()) {
-						std::pair<std::string, std::string> pair(a, b);
-						translation.keys.insert(pair);
+						translation.keys.insert({ a, b });
 					}
 				}
 
@@ -72,7 +74,9 @@ void Translation::loadTranslations(std::string modid) {
 		Utils::replace(&name, ".txt", "");
 		std::pair<std::string, Translation> pair(name, translation);
 		translations.insert(pair);
+		t.close();
 	}
+
 	setTranslation("english");
 }
 

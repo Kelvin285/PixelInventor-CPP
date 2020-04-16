@@ -2,14 +2,39 @@
 #include "Inignoto.h"
 #include <iostream>
 #include <set>
+#include "InventoryScreen.h"
+#include "IngameMenuScreen.h"
 
 void Input::doInput() {
-	/*
-	GuiRenderer* renderer = Inignoto::game->guiRenderer;
-	if (renderer->getOpenScreen() == null) {
+	
+	GuiRenderer* renderer = &Inignoto::game->guiRenderer;
+	if (renderer->getOpenScreen() == nullptr) {
 		doGameInput();
 	}
-	*/
+
+	if (Settings::INVENTORY.isJustPressed()) {
+		if (renderer != nullptr) {
+			if (renderer->getOpenScreen() != nullptr) {
+				if (!(renderer->getOpenScreen()->ID == IngameMenuScreen::ID)) {
+					renderer->closeScreen();
+				}
+			}
+			else {
+				renderer->openScreen(new InventoryScreen(renderer));
+			}
+		}
+	}
+	if (Settings::EXIT.isJustPressed()) {
+		if (renderer != nullptr) {
+			if (renderer->getOpenScreen() != nullptr) {
+				renderer->closeScreen();
+			}
+			else {
+				renderer->openScreen(new IngameMenuScreen(renderer));
+			}
+		}
+	}
+	
 	doGameInput();
 
 	Mouse::update();
@@ -21,7 +46,7 @@ void Input::updateCamera() {
 	float rotSpeed = 2.0f;
 	if (Settings::RIGHT.isPressed()) {
 		float yaw = 90;
-		Camera::position.x += speed * Camera::getForward(0, Camera::rotation.y + yaw).x *FPSCounter::getDelta();
+		Camera::position.x += speed * Camera::getForward(0, Camera::rotation.y + yaw).x * FPSCounter::getDelta();
 		Camera::position.y += speed * Camera::getForward(0, Camera::rotation.y + yaw).y * FPSCounter::getDelta();
 		Camera::position.z += speed * Camera::getForward(0, Camera::rotation.y + yaw).z * FPSCounter::getDelta();
 	}
@@ -59,7 +84,7 @@ void Input::updateCamera() {
 void Input::doGameInput() {
 	updateCamera();
 	
-	if (Mouse::locked) {
+	if (Mouse::locked && Inignoto::game->guiRenderer.getOpenScreen() == nullptr) {
 		Camera::rotation.y -= (Mouse::x - Mouse::lastX) * Settings::MOUSE_SENSITIVITY * FPSCounter::getDelta();
 		Camera::rotation.x -= (Mouse::y - Mouse::lastY) * Settings::MOUSE_SENSITIVITY * FPSCounter::getDelta();
 
