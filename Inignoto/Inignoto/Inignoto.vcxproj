@@ -23,7 +23,7 @@
     <ProjectGuid>{027FE37A-2793-4E7F-B86E-8320CC9E295A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Inignoto</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -157,10 +157,11 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Chunk.cpp" />
+    <ClCompile Include="ChunkBuilder.cpp" />
     <ClCompile Include="ChunkGenerator.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="Events.cpp" />
-    <ClCompile Include="FlatChunkGenerator.cpp" />
+    <ClCompile Include="FastNoise.cpp" />
     <ClCompile Include="FPSCounter.cpp" />
     <ClCompile Include="GuiRenderer.cpp" />
     <ClCompile Include="IngameMenuScreen.cpp" />
@@ -171,29 +172,29 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="RayTraceResult.cpp" />
+    <ClCompile Include="SeededRandom.cpp" />
     <ClCompile Include="Settings.cpp" />
-    <ClCompile Include="StoneCube.cpp" />
-    <ClCompile Include="Structure.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileData.cpp" />
     <ClCompile Include="TilePos.cpp" />
     <ClCompile Include="Tiles.cpp" />
     <ClCompile Include="Translation.cpp" />
-    <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="VBO.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="WorldSaver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlockBuilder.hpp" />
     <ClInclude Include="BlockFace.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Chunk.h" />
+    <ClInclude Include="ChunkBuilder.h" />
     <ClInclude Include="ChunkGenerator.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Events.h" />
-    <ClInclude Include="FlatChunkGenerator.h" />
+    <ClInclude Include="FastNoise.h" />
     <ClInclude Include="FPSCounter.h" />
     <ClInclude Include="GuiRenderer.h" />
     <ClInclude Include="GuiScreen.h" />
@@ -203,18 +204,17 @@
     <ClInclude Include="InputSetting.h" />
     <ClInclude Include="InventoryScreen.h" />
     <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="RayTraceResult.h" />
+    <ClInclude Include="SeededRandom.h" />
     <ClInclude Include="Settings.h" />
-    <ClInclude Include="StoneCube.h" />
-    <ClInclude Include="Structure.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileData.h" />
     <ClInclude Include="TilePos.h" />
     <ClInclude Include="Tiles.h" />
     <ClInclude Include="Translation.h" />
-    <ClInclude Include="Tree.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VBO.h" />
     <ClInclude Include="World.h" />

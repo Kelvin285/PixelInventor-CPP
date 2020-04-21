@@ -11,36 +11,55 @@
 #include "RayTraceResult.h"
 #include "TilePos.h"
 #include "TileData.h"
+#include <iostream>
+#include "SeededRandom.h"
+#include "Camera.h"
+#include "ChunkBuilder.h"
+#include "Settings.h"
+#include "MathHelper.h"
+#include "Tiles.h"
+#include <set>
+#include <map>
+#include <iterator>
+#include <mutex>
+#include <future>
+#include "VBO.h"
 
 class World
 {
 public:
+	struct ActiveChunkStorage {
+		bool active;
+		Chunk* chunk;
+	};
+	struct ChunkStorage {
+		glm::vec3 position;
+		Chunk chunk;
+	};
+
 	static std::set<Chunk*> saveQueue;
 	//std::vector<Entity> entities;
-	std::set<Chunk*> unloadedChunks;
-	std::set<Chunk*> activeChunks;
-	std::set<Chunk*> rendering;
 
-	static Chunk pseudochunk;
 	bool rebuild = false;
 
-	World(std::string worldName, long s);
+	SeededRandom random;
 
-	Chunk* getChunk(int x, int y, int z) {
-		return chunks[glm::vec3(x, y, z)];
+	
+
+	void init(std::string worldName, long s);
+
+	std::string getPosition(int x, int y, int z) {
+		std::string s;
+		s += x + ", " + y;
+		s += ", " + z;
+		return s;
 	}
 
-	void removeChunk(int x, int y, int z) {
-		chunks.erase(glm::vec3(x, y, z));
-	}
+	Chunk* getChunk(int x, int y, int z);
 
-	void addChunk(int x, int y, int z) {
-		if (getChunk(x, y, z) == nullptr) {
-			chunks.insert({ glm::vec3(x, y, z), new Chunk(x, y, z, this) });
-		}
-		activeChunks.insert(chunks[glm::vec3(x, y, z)]);
-		unloadedChunks.insert(chunks[glm::vec3(x, y, z)]);
-	}
+	void removeChunk(int x, int y, int z);
+
+	void addChunk(int x, int y, int z);
 
 	void saveChunks();
 	void buildChunks();
@@ -57,42 +76,30 @@ public:
 
 	void dispose();
 
-	glm::vec3 getSkyColor() {
-		return glm::vec3(91.0f / 255.0f, 198.0f / 255.0f, 208.0f / 255.0f);
-	}
+	glm::vec3 getSkyColor();
 
-	long getSeed() {
-		return this->seed;
-	}
+	long getSeed();
 
-	WorldSaver* getWorldSaver() {
-		return &this->worldSaver;
-	}
+	WorldSaver* getWorldSaver();
 
-	void setSeed(long seed) {
-		this->seed = seed;
-	}
+	void setSeed(long seed);
 
 	RayTraceResult rayTraceTiles(glm::vec3 start, glm::vec3 end, TileRayTraceType type);
 
 	Tile* getTile(TilePos pos);
 	TileData* getTileData(TilePos pos, bool modifying);
 
-	bool setTileData(TilePos pos, TileData data) {
-		return setTileData(pos.x, pos.y, pos.z, data);
-	}
+	bool setTileData(TilePos pos, TileData data);
 
-	Chunk getChunkAt(TilePos pos);
+	Chunk* getChunkAt(TilePos pos);
 
 	bool setTile(TilePos pos, Tile* tile);
 
 	bool setTile(int x, int y, int z, Tile* tile);
 
 	void mineTile(TilePos pos, float strength);
-
-	ChunkGenerator getChunkGenerator() {
-		return this->generator;
-	}
+	
+	ChunkGenerator* getChunkGenerator();
 
 private:
 	ChunkGenerator generator;
@@ -100,12 +107,17 @@ private:
 	
 	WorldSaver worldSaver;
 
-	std::unordered_map<glm::vec3, Chunk*> chunks;
+	std::vector<ChunkStorage> chunks;
+	
+	std::vector<ActiveChunkStorage> loadedChunks;
+	
 	glm::vec3 cp = glm::vec3(0.0f);
 
-	int mx, my, mz;
-	bool adding = false;
+	int mx = 0, my = 0, mz = 0;
 
 	bool setTileData(int x1, int y1, int z1, TileData data);
+
+	bool adding = false;
+
 };
 

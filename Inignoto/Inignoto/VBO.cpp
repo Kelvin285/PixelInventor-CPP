@@ -24,28 +24,27 @@ void VBO::createIndexBuffer() {
 void VBO::createUniformBuffers() {
 	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-	uniformBuffers.resize(Inignoto::game->swapChainImages.size());
-	uniformBuffersMemory.resize(Inignoto::game->swapChainImages.size());
-
-	for (size_t i = 0; i < Inignoto::game->swapChainImages.size(); i++) {
+	uniformBuffers.resize(Inignoto::game->swapChainImages.size() + 5);
+	uniformBuffersMemory.resize(Inignoto::game->swapChainImages.size() + 5);
+	for (size_t i = 0; i < Inignoto::game->swapChainImages.size() + 5; i++) {
 		Inignoto::game->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 	}
 }
 
 void VBO::createDescriptorSets() {
-	std::vector<VkDescriptorSetLayout> layouts(Inignoto::game->swapChainImages.size(), Inignoto::game->descriptorSetLayout);
+	std::vector<VkDescriptorSetLayout> layouts(Inignoto::game->swapChainImages.size() + 5, Inignoto::game->descriptorSetLayout);
 	VkDescriptorSetAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = descriptorPool;
-	allocInfo.descriptorSetCount = static_cast<uint32_t>(Inignoto::game->swapChainImages.size());
+	allocInfo.descriptorSetCount = static_cast<uint32_t>(Inignoto::game->swapChainImages.size() + 5);
 	allocInfo.pSetLayouts = layouts.data();
 
-	descriptorSets.resize(Inignoto::game->swapChainImages.size());
+	descriptorSets.resize(Inignoto::game->swapChainImages.size() + 5);
 	if (vkAllocateDescriptorSets(Inignoto::game->device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
 		throw std::runtime_error("failed to allocate descriptor sets!");
 	}
 
-	for (size_t i = 0; i < Inignoto::game->swapChainImages.size(); i++) {
+	for (size_t i = 0; i < Inignoto::game->swapChainImages.size() + 5; i++) {
 		VkDescriptorBufferInfo bufferInfo = {};
 		bufferInfo.buffer = uniformBuffers[i];
 		bufferInfo.offset = 0;
@@ -89,19 +88,19 @@ void VBO::createDescriptorSets() {
 void VBO::createDescriptorPool() {
 	VkDescriptorPoolSize poolSize = {};
 	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSize.descriptorCount = static_cast<uint32_t>(Inignoto::game->swapChainImages.size());
+	poolSize.descriptorCount = static_cast<uint32_t>(Inignoto::game->swapChainImages.size() + 5);
 
 	std::array<VkDescriptorPoolSize, 2> poolSizes = {};
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSizes[0].descriptorCount = static_cast<uint32_t>(Inignoto::game->swapChainImages.size());
+	poolSizes[0].descriptorCount = static_cast<uint32_t>(Inignoto::game->swapChainImages.size() + 5);
 	poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	poolSizes[1].descriptorCount = static_cast<uint32_t>(Inignoto::game->swapChainImages.size());
+	poolSizes[1].descriptorCount = static_cast<uint32_t>(Inignoto::game->swapChainImages.size() + 5);
 
 	VkDescriptorPoolCreateInfo poolInfo = {};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
 	poolInfo.pPoolSizes = poolSizes.data();
-	poolInfo.maxSets = static_cast<uint32_t>(Inignoto::game->swapChainImages.size());
+	poolInfo.maxSets = static_cast<uint32_t>(Inignoto::game->swapChainImages.size() + 5);
 
 	if (vkCreateDescriptorPool(Inignoto::game->device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor pool!");
@@ -133,6 +132,7 @@ void VBO::createVertexBuffer() {
 }
 
 void VBO::dispose() {
+	if (disposed) return;
 	for (size_t i = 0; i < uniformBuffers.size(); i++) {
 		vkDestroyBuffer(Inignoto::game->device, uniformBuffers[i], nullptr);
 		vkFreeMemory(Inignoto::game->device, uniformBuffersMemory[i], nullptr);
@@ -144,4 +144,5 @@ void VBO::dispose() {
 	vkFreeMemory(Inignoto::game->device, vertexBufferMemory, nullptr);
 	vkDestroyBuffer(Inignoto::game->device, indexBuffer, nullptr);
 	vkFreeMemory(Inignoto::game->device, indexBufferMemory, nullptr);
+	disposed = true;
 }

@@ -1,5 +1,9 @@
 #include "TileData.h"
 
+TileData::TileData() {
+	this->setTile(Tiles::AIR.getID());
+}
+
 TileData::TileData(int tile)
 {
 	this->setTile(tile);

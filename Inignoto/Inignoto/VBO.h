@@ -25,6 +25,7 @@ public:
 	bool orthographic = false;
 	bool created = false;
 	bool visible = true;
+	float loadValue = 0;
 	glm::vec3 position = glm::vec3(0.0);
 	glm::vec3 rotation = glm::vec3(0.0);
 	glm::vec3 scale = glm::vec3(1.0);
@@ -41,6 +42,8 @@ public:
 	
 	VkDescriptorPool descriptorPool;
 	std::vector<VkDescriptorSet> descriptorSets;
+
+	bool disposed;
 
 	void createIndexBuffer();
 

@@ -39,5 +39,14 @@ struct Vertex {
 		return attributeDescriptions;
 	}
 };
+
+static double lerp(double a, double b, double c) {
+	return a + c * (b - a);
+}
+
+static glm::vec3 lerp(glm::vec3 a, glm::vec3 b, float c) {
+	return glm::vec3(lerp(a.x, b.x, c), lerp(a.y, b.y, c), lerp(a.z, b.z, c));
+}
+
 #define max(a, b) ((a > b) ? a : b)
 #define min(a, b) ((a < b) ? a : b)

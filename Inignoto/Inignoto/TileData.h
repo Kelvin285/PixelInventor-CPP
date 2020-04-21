@@ -1,8 +1,10 @@
 #pragma once
 #include <string>
+#include "Tiles.h"
 class TileData
 {
 public:
+	TileData();
 	TileData(int tile);
 	int getTile();
 	void setTile(int tile);

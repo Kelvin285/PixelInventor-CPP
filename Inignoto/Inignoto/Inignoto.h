@@ -31,6 +31,9 @@
 #include "VBO.h"
 #include <set>
 #include "GuiRenderer.h"
+#include <thread>
+#include "World.h"
+#include <mutex>
 
 struct ModifyVBO {
 	VBO* vbo;
@@ -64,9 +67,17 @@ public:
 
 	GuiRenderer guiRenderer;
 
-private:
+	World world;
 
+	std::mutex mutex;
+
+	bool needsToRender;
+private:
+	bool checkingVBOS;
+	bool finished;
 	bool refreshView;
+	bool addedVBO;
+	bool removedVBO;
 
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -96,12 +107,12 @@ private:
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 	VkCommandPool commandPool;
-
+	
 	VkImage depthImage;
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 
-	std::set<VBO*> vbos;
+	std::vector<VBO*> vbos;
 	std::vector<ModifyVBO> removeVbos;
 	std::vector<ModifyVBO> addVbos;
 
@@ -133,6 +144,13 @@ private:
 	#else
 		const bool enableValidationLayers = true;
 	#endif
+
+	void worldUpdateThread();
+	void worldSaveThread();
+
+	void threadedRender();
+
+	void updateWorld();
 
 	void createInstance();
 

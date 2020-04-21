@@ -1,4 +1,5 @@
 #include "Tile.h"
+#include "Tiles.h"
 
 int Tile::CURRENT_ID = 0;
 
@@ -13,20 +14,25 @@ Tile::Tile(std::string modid, std::string name) {
 	for (auto at : data) {
 		std::string a = at.first;
 		std::string b = at.second;
-		if (!a.empty() && !b.empty()) {
-			if (a == "num_x") width = Utils::getInt(b);
-			if (a == "num_y") height = Utils::getInt(b);
-			if (a == "texture") texture = b;
-			if (a == "side") side_texture = b;
-			if (a == "top") top_texture = b;
-			if (a == "bottom") bottom_texture = b;
-			if (a == "left") left_texture = b;
-			if (a == "right") right_texture = b;
-			if (a == "front") front_texture = b;
-			if (a == "back") back_texture = b;
-		}
+		if (a == "num_x") width = Utils::getInt(b);
+		if (a == "num_y") height = Utils::getInt(b);
+		if (a == "texture") texture = b;
+		if (a == "side") side_texture = b;
+		if (a == "top") top_texture = b;
+		if (a == "bottom") bottom_texture = b;
+		if (a == "left") left_texture = b;
+		if (a == "right") right_texture = b;
+		if (a == "front") front_texture = b;
+		if (a == "back") back_texture = b;
 	}
+	
 	ID = CURRENT_ID++;
+	std::cout << "ID: " << ID << std::endl;
+}
+
+int Tile::getID()
+{
+	return this->ID;
 }
 
 std::string Tile::getTranslatedName() {
@@ -37,7 +43,7 @@ Tile* Tile::setHardness(float hardness) {
 	return this;
 }
 Tile* Tile::setFullCube(bool fullCube) {
-	this->fullCube = fullCube;
+	this->isFullCube = fullCube;
 	return this;
 }
 Tile* Tile::setReplaceable() {

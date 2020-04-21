@@ -89,8 +89,8 @@ public:
 
 					start = false;
 
-					for (size_t j = 0; j < data[0].length(); j++) {
-						char c = data[0][j];
+					for (size_t j = 0; j < data[1].length(); j++) {
+						char c = data[1][j];
 						if (start && c == '"') break;
 						if (start) b += c;
 						if (c == '"') start = true;
@@ -109,4 +109,6 @@ public:
 		}
 		return mapdata;
 	}
+
+	static void init();
 };

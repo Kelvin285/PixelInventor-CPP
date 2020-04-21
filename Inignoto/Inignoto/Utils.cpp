@@ -1,4 +1,7 @@
 #include "Utils.h"
+#include "Inignoto.h"
+#include <time.h>
+#include "Tiles.h"
 
 GLFWwindow* Utils::window;
 unsigned int Utils::FRAME_WIDTH = 1920 / 2;
@@ -42,4 +45,10 @@ void Utils::replace(std::string* a, std::string b, std::string c)
 	size_t len = b.length();
 
 	a->replace(i, i + len, c);
+}
+
+void Utils::init() {
+	Tiles::loadTiles();
+
+	Inignoto::game->world.init("world", 0);
 }

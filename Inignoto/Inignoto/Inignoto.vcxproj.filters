@@ -61,6 +61,12 @@
     <Filter Include="Source Files\Inignoto\world\structures">
       <UniqueIdentifier>{9d102c83-086d-4ab9-b804-cd2d7ff8c95a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Inignoto\Client\rendering\chunk">
+      <UniqueIdentifier>{92449fc7-c117-4fe7-9ac5-9dc28107f135}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Imported">
+      <UniqueIdentifier>{79760203-fd6c-457a-aca5-5a47c5665b35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -132,28 +138,31 @@
     <ClInclude Include="Tiles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
+    <ClInclude Include="RayTraceResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SeededRandom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Chunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BlockBuilder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ChunkGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FlatChunkGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Structure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StoneCube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Tree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RayTraceResult.h">
+    <ClInclude Include="World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WorldSaver.h">
@@ -224,8 +233,14 @@
     <ClCompile Include="Tiles.cpp">
       <Filter>Source Files\Inignoto\tile</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files\Inignoto\world</Filter>
+    <ClCompile Include="RayTraceResult.cpp">
+      <Filter>Source Files\Inignoto\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="SeededRandom.cpp">
+      <Filter>Source Files\Inignoto\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoise.cpp">
+      <Filter>Source Files\Imported</Filter>
     </ClCompile>
     <ClCompile Include="Chunk.cpp">
       <Filter>Source Files\Inignoto\world\chunk</Filter>
@@ -233,20 +248,11 @@
     <ClCompile Include="ChunkGenerator.cpp">
       <Filter>Source Files\Inignoto\world\chunk\generator</Filter>
     </ClCompile>
-    <ClCompile Include="FlatChunkGenerator.cpp">
-      <Filter>Source Files\Inignoto\world\chunk\generator</Filter>
+    <ClCompile Include="ChunkBuilder.cpp">
+      <Filter>Source Files\Inignoto\Client\rendering\chunk</Filter>
     </ClCompile>
-    <ClCompile Include="Structure.cpp">
-      <Filter>Source Files\Inignoto\world\structures</Filter>
-    </ClCompile>
-    <ClCompile Include="StoneCube.cpp">
-      <Filter>Source Files\Inignoto\world\structures</Filter>
-    </ClCompile>
-    <ClCompile Include="Tree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RayTraceResult.cpp">
-      <Filter>Source Files\Inignoto\Resources</Filter>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\Inignoto\world</Filter>
     </ClCompile>
     <ClCompile Include="WorldSaver.cpp">
       <Filter>Source Files\Inignoto\world</Filter>

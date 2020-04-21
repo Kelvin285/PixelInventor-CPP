@@ -7,5 +7,7 @@ public:
 
 	static const float Z_NEAR;
 	static const float Z_FAR;
+
+	static const int ACTIVE_CHUNK_DISTANCE;
 };
 

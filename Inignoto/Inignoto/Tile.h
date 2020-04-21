@@ -14,7 +14,7 @@ class Tile
 {
 private:
 	std::string name;
-	bool fullCube = true;
+	bool isFullCube = true;
 	bool visible = true;
 	bool blocksMovement = true;
 	bool isReplaceable = true;
@@ -39,19 +39,22 @@ private:
 
 
 public:
+	Tile() {
+		
+	}
 	Tile(std::string modid, std::string name);
 
 	TileRayTraceType getRayTraceType() { return rayTraceType; }
-	int getID() { return ID; }
+	int getID();
 	std::string getName() { return name; }
 	float getHardness() { return hardness; }
 
-	bool isFullCube() { return isFullCube; }
-	bool blocksMovement() { return blocksMovement; }
+	bool isFull() { return isFullCube; }
+	bool isSolid() { return blocksMovement; }
 	bool isVisible() { return visible; }
 	int getWidth() { return width; }
 	int getHeight() { return height; }
-	bool isReplaceable() { return isReplaceable; }
+	bool canBeReplaced() { return isReplaceable; }
 
 	std::string getTranslatedName();
 	Tile* setHardness(float hardness);
