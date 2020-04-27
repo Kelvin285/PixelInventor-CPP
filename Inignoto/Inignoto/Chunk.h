@@ -19,6 +19,34 @@ public:
 	const static int SIZE_Y = 256;
 
 	const static int NUM_TILES = SIZE * SIZE_Y * SIZE;
+	
+	Chunk() = default;
+	~Chunk() = default;
+	Chunk(Chunk&& chunk) noexcept : x(std::move(chunk.x)), y(std::move(chunk.y)), z(std::move(chunk.z)), world(std::move(chunk.world)),
+	pos(std::move(chunk.pos)), generated(std::move(chunk.generated)), needsToSave(std::move(chunk.needsToSave)),
+	loadValue(std::move(chunk.loadValue)), changed(std::move(chunk.changed)), needsToRebuild(std::move(chunk.needsToRebuild)),
+	triedToLoad(std::move(chunk.triedToLoad)), savefile(std::move(chunk.savefile)), tiles(std::move(chunk.tiles)),
+	mesh(std::move(chunk.mesh)){
+		
+	}
+	Chunk& operator=(Chunk&& chunk) {
+		x = std::move(chunk.x);
+		y = std::move(chunk.y);
+		z = std::move(chunk.z);
+		world = std::move(chunk.world);
+		pos = std::move(chunk.pos);
+		generated = std::move(chunk.generated);
+		needsToSave = std::move(chunk.needsToSave);
+		loadValue = std::move(chunk.loadValue);
+		changed = std::move(chunk.changed);
+		needsToRebuild = std::move(chunk.needsToRebuild);
+		triedToLoad = std::move(chunk.triedToLoad);
+		savefile = std::move(chunk.savefile);
+		tiles = std::move(chunk.tiles);
+		mesh = std::move(chunk.mesh);
+
+		return *this;
+	}
 
 	World* world;
 	glm::ivec3 pos;

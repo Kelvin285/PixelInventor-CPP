@@ -2,6 +2,7 @@
 #include "Chunk.h"
 
 VBO ChunkBuilder::buildChunk(Chunk* chunk) {
+
 	VBO vbo;
 	if (chunk->voxels <= 0) return vbo;
 	std::vector<glm::vec3> vertices;
@@ -22,7 +23,7 @@ VBO ChunkBuilder::buildChunk(Chunk* chunk) {
 	}
 	vbo.vertices = verts;
 	vbo.indices = indices;
-	
+
 	return vbo;
 }
 

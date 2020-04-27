@@ -35,7 +35,7 @@ void ChunkGenerator::generateChunk(Chunk* chunk, bool structures) {
 				if (Y == height) {
 					chunk->setLocalTile(x, y, z, topTile);
 				}
-				if (y < height) {
+				if (Y < height) {
 					chunk->setLocalTile(x, y, z, &Tiles::DIRT);
 					//add tree structure to chunk?
 				}

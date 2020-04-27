@@ -15,7 +15,10 @@ void World::init(std::string worldName, long s) {
 	//generator.generateChunk(&pseudochunk, true);
 	//pseudochunk.mesh = ChunkBuilder::buildChunk(&pseudochunk);
 	//Inignoto::game->addVBO(&pseudochunk.mesh);
-	
+	addChunk(0, 0, 0);
+	std::cout << "Chunk memory location: " << &chunks[0].chunk.mesh << ", x: " << chunks[0].chunk.getX() << std::endl;
+	addChunk(1, 0, 0);
+	std::cout << "New chunk memory location: " << &chunks[0].chunk.mesh << ", x: " << chunks[0].chunk.getX() << std::endl;
 }
 
 Chunk* World::getChunk(int x, int y, int z) {
@@ -38,17 +41,25 @@ void World::removeChunk(int x, int y, int z) {
 }
 
 void World::addChunk(int x, int y, int z) {
+	bool contains = false;
 	for (size_t i = 0; i < loadedChunks.size(); i++) {
 		if (glm::vec3(x, y, z) == glm::vec3(loadedChunks[i].chunk->getX(), loadedChunks[i].chunk->getY(), loadedChunks[i].chunk->getZ())) {
 			loadedChunks[i].active = true;
+			contains = true;
 			break;
 		}
 	}
-	if (getChunk(x, y, z) != nullptr) return;
+	
+	if (getChunk(x, y, z) != nullptr) {
+		return;
+	}
+	std::cout << "gen" << std::endl;
+	
 	ChunkStorage storage;
 	storage.position = glm::vec3(x, y, z);
 	storage.chunk.init(x, y, z, this);
-	chunks.push_back(storage);
+	chunks.push_back(std::move(storage));
+
 }
 
 void World::saveChunks() {
@@ -60,6 +71,7 @@ void World::saveChunks() {
 }
 
 void World::buildChunks() {
+	if (!adding) return;
 	int cx = (int)floor(Camera::position.x / Chunk::SIZE);
 	int cy = (int)floor(Camera::position.y / Chunk::SIZE_Y);
 	int cz = (int)floor(Camera::position.z / Chunk::SIZE);
@@ -74,6 +86,7 @@ void World::buildChunks() {
 		{
 			ChunkStorage* storage = &chunks[i];
 			double dist = glm::distance(cp, storage->position);
+			if (dist < distance)
 			if (storage->chunk.generated == false) {
 				distance = dist;
 				closest = &storage->chunk;
@@ -91,29 +104,33 @@ void World::buildChunks() {
 }
 
 void World::updateChunkManager() {
+	if (!adding) return;
 	for (size_t i = 0; i < loadedChunks.size(); i++) {
 		if (loadedChunks[i].active == false) {
 			Inignoto::game->removeVBO(&loadedChunks[i].chunk->mesh);
 		}
 	}
-
+	
 	loadedChunks.clear();
 
-	for (auto at : chunks) {
-		ActiveChunkStorage storage = { false, &at.chunk };
+	for (size_t i = 0; i < chunks.size(); i++) {
+		ActiveChunkStorage storage = { false, &chunks[i].chunk };
 		loadedChunks.push_back(storage);
 	}
 
 	mx = (int)floor(Camera::position.x / Chunk::SIZE);
 	my = (int)floor(Camera::position.y / Chunk::SIZE_Y);
 	mz = (int)floor(Camera::position.z / Chunk::SIZE);
+
+	
 	for (int x = -Settings::VIEW_DISTANCE / 2; x < Settings::VIEW_DISTANCE / 2; x++) {
 		for (int z = -Settings::VIEW_DISTANCE / 2; z < Settings::VIEW_DISTANCE / 2; z++) {
 			for (int y = -Settings::VERTICAL_VIEW_DISTANCE / 2; y < Settings::VERTICAL_VIEW_DISTANCE / 2; y++) {
-				addChunk(x + mx, y + my, z + mz);				
+				addChunk(x + mx, y + my, z + mz);
 			}
 		}
 	}
+	adding = false;
 }
 
 void World::tickChunks() {
@@ -132,11 +149,13 @@ void World::render() {
 }
 
 void World::renderChunks() {
-	
+	if (adding) return;
+	std::cout << chunks.size() << std::endl;
 	for (size_t i = 0; i < chunks.size(); i++) {
 		chunks[i].chunk.render();
 	}
 	renderTileHover();
+	adding = true;
 }
 
 void World::renderTileHover() {
@@ -149,8 +168,8 @@ void World::dispose() {
 	for (size_t i = 0; i < chunks.size(); i++) {
 		chunks[i].chunk.dispose();
 	}
-	for (auto at : chunks) {
-		at.chunk.dispose();
+	for (size_t i = 0; i < chunks.size(); i++) {
+		chunks[i].chunk.dispose();
 	}
 }
 

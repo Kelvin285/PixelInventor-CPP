@@ -14,6 +14,7 @@ void Chunk::init(int x, int y, int z, World* world) {
 	int Y = y * Chunk::SIZE_Y;
 	int Z = z * Chunk::SIZE;
 	pos = glm::ivec3(X, Y, Z);
+	std::cout << x << ", " << y << ", " << z << std::endl;
 }
 
 int Chunk::getX() {
@@ -133,12 +134,15 @@ void Chunk::tick() {
 }
 
 void Chunk::render() {
+	if (voxels <= 0) return;
 	if (needsToRebuild) {
 		if (!mesh.created) {
 			mesh.createVertexBuffer();
-			mesh.created = true;
 		}
-		Inignoto::game->addVBO(&mesh);
+		
+		if (mesh.indices.size() > 0) {
+			Inignoto::game->addVBO(&mesh);
+		}
 		needsToRebuild = false;
 	}
 	if (canRender()) {

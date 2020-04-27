@@ -150,6 +150,8 @@ private:
 
 	void threadedRender();
 
+	void checkVBO(VBO* vbo);
+
 	void updateWorld();
 
 	void createInstance();

@@ -35,6 +35,15 @@ public:
 	struct ChunkStorage {
 		glm::vec3 position;
 		Chunk chunk;
+		ChunkStorage() = default;
+		ChunkStorage(ChunkStorage&& m1) noexcept : position(std::move(m1.position)), chunk(std::move(m1.chunk)) {
+
+		}
+		ChunkStorage& operator=(ChunkStorage&& m1) {
+			position = std::move(m1.position);
+			chunk = std::move(m1.chunk);
+			return *this;
+		}
 	};
 
 	static std::set<Chunk*> saveQueue;
@@ -102,6 +111,7 @@ public:
 	ChunkGenerator* getChunkGenerator();
 
 private:
+	std::mutex mutex;
 	ChunkGenerator generator;
 	long seed;
 	
@@ -110,6 +120,8 @@ private:
 	std::vector<ChunkStorage> chunks;
 	
 	std::vector<ActiveChunkStorage> loadedChunks;
+
+	std::set<Chunk*> rendering;
 	
 	glm::vec3 cp = glm::vec3(0.0f);
 
