@@ -45,14 +45,14 @@ void Input::updateCamera() {
 	float speed = 0.01f;
 	float rotSpeed = 2.0f;
 	if (Settings::RIGHT.isPressed()) {
-		float yaw = 90;
+		float yaw = -90;
 		Camera::position.x += speed * Camera::getForward(0, Camera::rotation.y + yaw).x * FPSCounter::getDelta();
 		Camera::position.y += speed * Camera::getForward(0, Camera::rotation.y + yaw).y * FPSCounter::getDelta();
 		Camera::position.z += speed * Camera::getForward(0, Camera::rotation.y + yaw).z * FPSCounter::getDelta();
 	}
 
 	if (Settings::LEFT.isPressed()) {
-		float yaw = -90;
+		float yaw = 90;
 		Camera::position.x += speed * Camera::getForward(0, Camera::rotation.y + yaw).x * FPSCounter::getDelta();
 		Camera::position.y += speed * Camera::getForward(0, Camera::rotation.y + yaw).y * FPSCounter::getDelta();
 		Camera::position.z += speed * Camera::getForward(0, Camera::rotation.y + yaw).z * FPSCounter::getDelta();
@@ -85,8 +85,8 @@ void Input::doGameInput() {
 	updateCamera();
 	
 	if (Mouse::locked && Inignoto::game->guiRenderer.getOpenScreen() == nullptr) {
-		Camera::rotation.y -= (Mouse::x - Mouse::lastX) * Settings::MOUSE_SENSITIVITY * FPSCounter::getDelta();
-		Camera::rotation.x -= (Mouse::y - Mouse::lastY) * Settings::MOUSE_SENSITIVITY * FPSCounter::getDelta();
+		Camera::rotation.y += (Mouse::x - Mouse::lastX) * Settings::MOUSE_SENSITIVITY * FPSCounter::getDelta();
+		Camera::rotation.x += (Mouse::y - Mouse::lastY) * Settings::MOUSE_SENSITIVITY * FPSCounter::getDelta();
 
 		if (Camera::rotation.x < -90) Camera::rotation.x = -90;
 		if (Camera::rotation.x > 90) Camera::rotation.x = 90;

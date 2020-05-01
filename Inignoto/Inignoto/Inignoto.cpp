@@ -292,50 +292,47 @@ void Inignoto::transitionImageLayout(VkImage image, VkFormat format, VkImageLayo
 	endSingleTimeCommands(commandBuffer);
 }
 
-void Inignoto::addVBO(VBO* vbo, bool now) {
-	if (vbo->uniformBuffersMemory.size() == 0) {
-		std::cout << "Cannot add a VBO with a size of zero!" << std::endl;
-		return;
-	}
-	if (now) {
-		vbos.push_back(vbo);
-		return;
-	}
-	
-	bool contains = false;
-	for (size_t i = 0; i < vbos.size(); i++) {
-		if (vbos[i] == vbo) {
-			contains = true;
-		}
-	}
-	if (!contains) {
-		ModifyVBO addition = {};
-		addition.vbo = vbo;
-		addition.TTL = swapChainImages.size() * 2;
-		addVbos.push_back(addition);
-		if (now) vbos.push_back(addition.vbo);
-		addedVBO = true;
-	}
-
+const int Inignoto::addVBO(CreateVBO createInfo)
+{
+	const int ID = CURRENT_ID + 0;
+	VBO vbo;
+	vbo.vertices = createInfo.vertices;
+	vbo.indices = createInfo.indices;
+	vbo.createVertexBuffer();
+	vbo.orthographic = createInfo.orthographic;
+	vbo.position = createInfo.position;
+	vbo.rotation = createInfo.rotation;
+	vbo.scale = createInfo.scale;
+	vbos.push_back({ ID, vbo });
+	createInfo.vertices.clear();
+	createInfo.indices.clear();
+	CURRENT_ID++;
+	return ID;
 }
-
-void Inignoto::removeVBO(VBO* vbo, bool now) {
-	bool contains = false;
-	size_t I = 0;
+void Inignoto::drawVBO(int VBO) {
 	for (size_t i = 0; i < vbos.size(); i++) {
-		if (vbos[i] == vbo) {
-			I = i;
-			contains = true;
+		if (vbos[i].ID == VBO) {
+			vbos[i].rendering = swapChainImages.size() + 5;
+			return;
 		}
 	}
-	if (contains) {
-		if (now) vbos.erase(vbos.begin() + I);
-		ModifyVBO removal = {};
-		removal.vbo = vbo;
-		removal.TTL = swapChainImages.size() * 2;
-		removeVbos.push_back(removal);
-		removedVBO = true;
+}
+void Inignoto::deleteVBO(int VBO) {
+	for (size_t i = 0; i < vbos.size(); i++) {
+		if (vbos[i].ID == VBO) {
+			vbos[i].vbo.dispose();
+			vbos.erase(vbos.begin() + i);
+			return;
+		}
 	}
+}
+VBO* Inignoto::getVBO(int VBO) {
+	for (size_t i = 0; i < vbos.size(); i++) {
+		if (vbos[i].ID == VBO) {
+			return &vbos[i].vbo;
+		}
+	}
+	return nullptr;
 }
 
 void Inignoto::createVertexBuffer() {
@@ -374,18 +371,15 @@ void Inignoto::createVertexBuffer() {
 		4, 5, 6, 6, 7, 4
 	};
 
-	testVBO.vertices = vertices;
-	testVBO.indices = indices;
-	testVBO.createVertexBuffer();
+	CreateVBO test1 = { vertices, indices };
 
-	testVBO2.vertices = vertices;
-	testVBO2.indices = indices;
-	testVBO2.createVertexBuffer();
+	testVBO = addVBO(test1);
 
-	testVBO2.position.y = 2;
+	CreateVBO test2 = { vertices, indices };
 
-	addVBO(&testVBO);
-	addVBO(&testVBO2);
+	testVBO2 = addVBO(test2);
+
+	getVBO(testVBO2)->position.y = 2;
 }
 
 uint32_t Inignoto::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
@@ -506,9 +500,13 @@ void Inignoto::modifyCommandBuffers(size_t i) {
 	vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 	vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
-	for (auto vbo : vbos) {
-		vbo->render(commandBuffers[i], pipelineLayout, i);
+	
+	for (size_t j = 0; j < vbos.size(); j++) {
+		if (vbos[j].rendering > 0)
+		{
+			vbos[j].vbo.render(commandBuffers[i], pipelineLayout, i);
+			vbos[j].rendering--;
+		}
 	}
 
 	vkCmdEndRenderPass(commandBuffers[i]);
@@ -556,10 +554,6 @@ void Inignoto::createCommandBuffers() {
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-
-		for (auto vbo : vbos) {
-			vbo->render(commandBuffers[i], pipelineLayout, i);
-		}
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 
@@ -1251,8 +1245,7 @@ void Inignoto::worldUpdateThread() {
 			
 			//std::unique_lock<std::mutex> lck(mutex, std::try_to_lock);
 			//if (lck.owns_lock()) {
-				world.buildChunks();
-				updateWorld();
+				
 			//}
 			
 		}
@@ -1289,7 +1282,8 @@ void Inignoto::loop() {
 	threadedRender.detach();
 
 	while (!glfwWindowShouldClose(Utils::window)) {
-		
+		world.buildChunks();
+		updateWorld();
 		tick();
 		glfwPollEvents();
 		Input::doInput();
@@ -1329,21 +1323,11 @@ void Inignoto::render() {
 		world.renderChunks();
 	//}
 
+		drawVBO(testVBO);
+		drawVBO(testVBO2);
+
 	bool canAdd = true;
 
-	for (size_t i = 0; i < addVbos.size(); i++) {
-		vbos.push_back(addVbos[i].vbo);
-	}
-	addVbos.clear();
-
-	for (size_t i = 0; i < removeVbos.size(); i++) {
-		for (size_t j = 0; j < vbos.size(); j++) {
-			if (vbos[j] == removeVbos[i].vbo) {
-				vbos.erase(vbos.begin() + j);
-			}
-		}
-	}
-	removeVbos.clear();
 	
 }
 
@@ -1391,7 +1375,8 @@ void Inignoto::drawFrame() {
 	vkResetFences(device, 1, &inFlightFences[currentFrame]);
 
 	if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS) {
-		throw std::runtime_error("failed to submit draw command buffer!");
+		std::cout << "failed to submit draw command buffer!" << std::endl;
+		return;
 	}
 
 	VkPresentInfoKHR presentInfo = {};
@@ -1446,9 +1431,11 @@ void Inignoto::updateUniformBuffer(uint32_t currentImage) {
 	auto currentTime = std::chrono::high_resolution_clock::now();
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
-	
-	for (auto vbo : vbos) {
-		vbo->updateUniformBuffer(swapChainExtent, currentImage);
+	for (size_t i = 0; i < vbos.size(); i++) {
+		if (vbos[i].rendering > 0) 
+		{
+			vbos[i].vbo.updateUniformBuffer(swapChainExtent, currentImage);
+		}
 	}
 	
 }
@@ -1462,12 +1449,8 @@ void Inignoto::dispose() {
 
 	vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
-	for (auto vbo : vbos) {
-		vbo->dispose();
-	}
-
-	for (auto vbo : addVbos) {
-		vbo.vbo->dispose();
+	for (size_t i = 0; i < vbos.size(); i++) {
+		vbos[i].vbo.dispose();
 	}
 
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {

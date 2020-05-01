@@ -20,31 +20,47 @@ public:
 
 	const static int NUM_TILES = SIZE * SIZE_Y * SIZE;
 	
-	Chunk() = default;
-	~Chunk() = default;
-	Chunk(Chunk&& chunk) noexcept : x(std::move(chunk.x)), y(std::move(chunk.y)), z(std::move(chunk.z)), world(std::move(chunk.world)),
-	pos(std::move(chunk.pos)), generated(std::move(chunk.generated)), needsToSave(std::move(chunk.needsToSave)),
-	loadValue(std::move(chunk.loadValue)), changed(std::move(chunk.changed)), needsToRebuild(std::move(chunk.needsToRebuild)),
-	triedToLoad(std::move(chunk.triedToLoad)), savefile(std::move(chunk.savefile)), tiles(std::move(chunk.tiles)),
-	mesh(std::move(chunk.mesh)){
-		
-	}
-	Chunk& operator=(Chunk&& chunk) {
-		x = std::move(chunk.x);
-		y = std::move(chunk.y);
-		z = std::move(chunk.z);
-		world = std::move(chunk.world);
-		pos = std::move(chunk.pos);
-		generated = std::move(chunk.generated);
-		needsToSave = std::move(chunk.needsToSave);
-		loadValue = std::move(chunk.loadValue);
-		changed = std::move(chunk.changed);
-		needsToRebuild = std::move(chunk.needsToRebuild);
-		triedToLoad = std::move(chunk.triedToLoad);
-		savefile = std::move(chunk.savefile);
-		tiles = std::move(chunk.tiles);
-		mesh = std::move(chunk.mesh);
+	bool nullchunk = false;
 
+	Chunk(bool n = false) : nullchunk(n) {
+	}
+
+	Chunk(const Chunk& old) noexcept {
+		nullchunk = (old.nullchunk);
+		world = (old.world);
+		pos = (old.pos);
+		voxels = (old.voxels);
+		generated = (old.generated);
+		tiles = (old.tiles);
+		mesh = (old.mesh);
+		needsToSave = (old.needsToSave);
+		loadValue = (old.loadValue);
+		changed = (old.changed);
+		needsToRebuild = (old.needsToRebuild);
+		triedToLoad = (old.triedToLoad);
+		savefile = (old.savefile);
+		x = (old.x);
+		y = (old.y);
+		z = (old.z);
+	}
+
+	Chunk& operator=(Chunk& old) {
+		nullchunk = (old.nullchunk);
+		world = (old.world);
+		pos = (old.pos);
+		voxels = (old.voxels);
+		generated = (old.generated);
+		tiles = (old.tiles);
+		mesh = (old.mesh);
+		needsToSave = (old.needsToSave);
+		loadValue = (old.loadValue);
+		changed = (old.changed);
+		needsToRebuild = (old.needsToRebuild);
+		triedToLoad = (old.triedToLoad);
+		savefile = (old.savefile);
+		x = (old.x);
+		y = (old.y);
+		z = (old.z);
 		return *this;
 	}
 
@@ -57,7 +73,7 @@ public:
 
 	std::vector<TileData> tiles;
 
-	VBO mesh;
+	int mesh;
 
 	bool needsToSave = false;
 
@@ -84,7 +100,7 @@ public:
 	void dispose();
 
 	Tile* getLocalTile(int x, int y, int z);
-	TileData* getTileData(int x, int y, int z, bool modifying);
+	TileData& getTileData(int x, int y, int z, bool modifying);
 	void setTileData(int x, int y, int z, TileData data);
 	void setLocalTile(int x, int y, int z, Tile* tile);
 	void markForRerender();

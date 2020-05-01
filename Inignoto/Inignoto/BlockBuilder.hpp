@@ -12,44 +12,12 @@ class BlockBuilder {
 public:
 
 
-	static VBO buildMesh(Tile* tile, float x, float y, float z) {
-
-		std::vector<glm::vec3> vertices;
-		std::vector<glm::vec2> texCoords;
-		std::vector<uint32_t> indices;
-
-		int index = 0;
-		TileData data(tile->getID());
-		if (tile->isFull() && tile->isVisible()) {
-			index = addFace(x, y, z, BlockFace::LEFT, &data, &vertices, &texCoords, &indices, index);
-			index = addFace(x, y, z, BlockFace::RIGHT, &data, &vertices, &texCoords, &indices, index);
-			index = addFace(x, y, z, BlockFace::BACK, &data, &vertices, &texCoords, &indices, index);
-			index = addFace(x, y, z, BlockFace::FRONT, &data, &vertices, &texCoords, &indices, index);
-			index = addFace(x, y, z, BlockFace::DOWN, &data, &vertices, &texCoords, &indices, index);
-			index = addFace(x, y, z, BlockFace::UP, &data, &vertices, &texCoords, &indices, index);
+	static int buildMesh(Tile* tile, float x, float y, float z);
+	static int addFace(float x, float y, float z, BlockFace face, TileData& data, std::vector<glm::vec3>* vertices, std::vector<glm::vec2>* texCoords, std::vector<uint32_t>* indices, uint32_t index) {
+		if (data.getMiningTime() > 0) {
+			index = addMiningFace((int)x, (int)y, (int)z, face, data.getMiningTime(), vertices, texCoords, indices, index);
 		}
-
-		std::vector<Vertex> verts;
-		verts.resize(vertices.size());
-		for (size_t i = 0; i < vertices.size(); i++) {
-			Vertex v = {
-				vertices[i],
-				{1, 1, 1},
-				texCoords[i]
-			};
-			verts[i] = v;
-		}
-		VBO vbo;
-		vbo.vertices = verts;
-		vbo.indices = indices;
-		vbo.createVertexBuffer();
-		return vbo;
-	}
-	static int addFace(float x, float y, float z, BlockFace face, TileData* data, std::vector<glm::vec3>* vertices, std::vector<glm::vec2>* texCoords, std::vector<uint32_t>* indices, uint32_t index) {
-		if (data->getMiningTime() > 0) {
-			index = addMiningFace((int)x, (int)y, (int)z, face, data->getMiningTime(), vertices, texCoords, indices, index);
-		}
-		Tile* tile = Tiles::getTile(data->getTile());
+		Tile* tile = Tiles::getTile(data.getTile());
 		std::array<glm::vec3, 4> vertices1;
 		uint32_t indices1[] = { 0, 1, 2, 2, 3, 0 };
 

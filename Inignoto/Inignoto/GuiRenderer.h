@@ -19,10 +19,10 @@ public:
 	GuiScreen* getOpenScreen();
 	void openScreen(GuiScreen* screen);
 	void init();
-	VBO createVBO(std::string texture, int x, int y, int width, int height);
+	int createVBO(std::string texture, int x, int y, int width, int height);
 private:
-	VBO FP_CURSOR;
-	VBO HOTBAR;
-	VBO VIGINETTE;
+	int FP_CURSOR;
+	int HOTBAR;
+	int VIGINETTE;
 };
 

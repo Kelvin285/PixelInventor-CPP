@@ -41,7 +41,7 @@ public:
 		}
 		ChunkStorage& operator=(ChunkStorage&& m1) {
 			position = std::move(m1.position);
-			chunk = std::move(m1.chunk);
+			chunk = m1.chunk;
 			return *this;
 		}
 	};
@@ -59,8 +59,7 @@ public:
 
 	std::string getPosition(int x, int y, int z) {
 		std::string s;
-		s += x + ", " + y;
-		s += ", " + z;
+		s += std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z);
 		return s;
 	}
 
@@ -96,7 +95,7 @@ public:
 	RayTraceResult rayTraceTiles(glm::vec3 start, glm::vec3 end, TileRayTraceType type);
 
 	Tile* getTile(TilePos pos);
-	TileData* getTileData(TilePos pos, bool modifying);
+	TileData& getTileData(TilePos pos, bool modifying);
 
 	bool setTileData(TilePos pos, TileData data);
 
@@ -118,6 +117,8 @@ private:
 	WorldSaver worldSaver;
 
 	std::vector<ChunkStorage> chunks;
+
+	std::vector<std::future<void>> async_calls;
 	
 	std::vector<ActiveChunkStorage> loadedChunks;
 
@@ -128,6 +129,10 @@ private:
 	int mx = 0, my = 0, mz = 0;
 
 	bool setTileData(int x1, int y1, int z1, TileData data);
+
+	void buildChunk(size_t closest);
+
+	Chunk NULL_CHUNK = Chunk(true);
 
 	bool adding = false;
 

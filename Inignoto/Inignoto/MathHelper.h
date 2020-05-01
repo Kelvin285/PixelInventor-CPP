@@ -5,9 +5,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <array>
 struct Vertex {
-	glm::vec3 pos;
-	glm::vec3 color;
-	glm::vec2 texCoord;
+	glm::vec3 pos = glm::vec3(0, 0, 0);
+	glm::vec3 color = glm::vec3(1, 1, 1);
+	glm::vec2 texCoord = glm::vec3(0, 0, 0);
 
 	static VkVertexInputBindingDescription getBindingDescription() {
 		VkVertexInputBindingDescription bindingDescription = {};

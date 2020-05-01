@@ -34,10 +34,27 @@
 #include <thread>
 #include "World.h"
 #include <mutex>
+#include <unordered_map>
 
-struct ModifyVBO {
-	VBO* vbo;
-	int TTL = 20;
+
+struct CreateVBO {
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
+	bool orthographic;
+	glm::vec3 position = glm::vec3(0, 0, 0), rotation = glm::vec3(0, 0, 0), scale = glm::vec3(1, 1, 1);
+};
+
+struct VBOHolder {
+	int ID;
+	VBO vbo;
+	int rendering;
+
+	VBOHolder operator=(const VBOHolder& holder) {
+		this->ID = holder.ID;
+		this->vbo = holder.vbo;
+		this->rendering = holder.rendering;
+		return *this;
+	}
 };
 
 class Inignoto
@@ -59,11 +76,14 @@ public:
 	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
-	void addVBO(VBO* vbo, bool now = false);
-	void removeVBO(VBO* vbo, bool now = false);
 
-	VBO testVBO;
-	VBO testVBO2;
+	const int addVBO(CreateVBO createInfo);
+	void drawVBO(int VBO);
+	void deleteVBO(int VBO);
+	VBO* getVBO(int VBO);
+
+	int testVBO;
+	int testVBO2;
 
 	GuiRenderer guiRenderer;
 
@@ -73,6 +93,7 @@ public:
 
 	bool needsToRender;
 private:
+	unsigned int CURRENT_ID = 0;
 	bool checkingVBOS;
 	bool finished;
 	bool refreshView;
@@ -112,9 +133,7 @@ private:
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 
-	std::vector<VBO*> vbos;
-	std::vector<ModifyVBO> removeVbos;
-	std::vector<ModifyVBO> addVbos;
+	std::vector<VBOHolder> vbos;
 
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -249,6 +268,3 @@ private:
 		void* pUserData);
 
 };
-
-
-//I'm watching you

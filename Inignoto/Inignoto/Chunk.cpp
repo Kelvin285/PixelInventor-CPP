@@ -14,7 +14,8 @@ void Chunk::init(int x, int y, int z, World* world) {
 	int Y = y * Chunk::SIZE_Y;
 	int Z = z * Chunk::SIZE;
 	pos = glm::ivec3(X, Y, Z);
-	std::cout << x << ", " << y << ", " << z << std::endl;
+	tiles.resize(Chunk::NUM_TILES);
+	
 }
 
 int Chunk::getX() {
@@ -46,40 +47,54 @@ void Chunk::setWorld(World* world) {
 }
 
 Tile* Chunk::getLocalTile(int x, int y, int z) {
+	if (tiles.size() == 0 || world == 0) {
+		return &Tiles::AIR;
+	}
 	if (x >= 0 && y >= 0 && z >= 0 && x < Chunk::SIZE && y < Chunk::SIZE_Y && z < Chunk::SIZE) {
+		if (x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y < tiles.size())
 		return Tiles::getTile(tiles[x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y].getTile());
 	}
 	return &Tiles::AIR;
 }
 
-TileData* Chunk::getTileData(int x, int y, int z, bool modifying) {
+TileData& Chunk::getTileData(int x, int y, int z, bool modifying) {
+	TileData AIR = TileData(Tiles::AIR.getID());
+	if (tiles.size() == 0 || world == 0) {
+		return AIR;
+	}
 	if (x >= 0 && y >= 0 && z >= 0 && x < Chunk::SIZE && y < Chunk::SIZE_Y && z < Chunk::SIZE) {
 		if (modifying) changed = true;
-		return &tiles[x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y];
+		if (x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y < tiles.size())
+		return tiles[x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y];
 	}
-	return &TileData(Tiles::AIR.getID());
+	return AIR;
 }
 
 void Chunk::setTileData(int x, int y, int z, TileData data) {
+	if (tiles.size() > 0 && world != 0)
 	if (x >= 0 && y >= 0 && z >= 0 && x < Chunk::SIZE && y < Chunk::SIZE_Y && z < Chunk::SIZE) {
+		if (x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y < tiles.size())
 		tiles[x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y] = data;
 	}
 }
 
 void Chunk::setLocalTile(int x, int y, int z, Tile* tile)
 {
+	if (tiles.size() > 0 && world != 0)
 	if (x >= 0 && y >= 0 && z >= 0 && x < Chunk::SIZE && y < Chunk::SIZE_Y && z < Chunk::SIZE) {
-		Tile* local = getLocalTile(x, y, z);
-		if (tile == &Tiles::AIR && local != &Tiles::AIR) {
-			if (voxels > 0) {
-				voxels--;
+		if (x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y < tiles.size()) {
+			Tile* local = getLocalTile(x, y, z);
+			if (tile == &Tiles::AIR && local != &Tiles::AIR) {
+				if (voxels > 0) {
+					voxels--;
+				}
 			}
-		}
-		if (tile != &Tiles::AIR && local == &Tiles::AIR) {
-			voxels++;
-		}
-		tiles[x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y].setTile(tile->getID());
+			if (tile != &Tiles::AIR && local == &Tiles::AIR) {
+				voxels++;
+			}
 
+			tiles[x + y * Chunk::SIZE + z * Chunk::SIZE * Chunk::SIZE_Y].setTile(tile->getID());
+		}
 	}
 }
 
@@ -135,16 +150,6 @@ void Chunk::tick() {
 
 void Chunk::render() {
 	if (voxels <= 0) return;
-	if (needsToRebuild) {
-		if (!mesh.created) {
-			mesh.createVertexBuffer();
-		}
-		
-		if (mesh.indices.size() > 0) {
-			Inignoto::game->addVBO(&mesh);
-		}
-		needsToRebuild = false;
-	}
 	if (canRender()) {
 		if (loadValue > 0) {
 			loadValue -= 0.02f * FPSCounter::getDelta();
@@ -152,17 +157,21 @@ void Chunk::render() {
 		else {
 			loadValue = 0;
 		}
-		mesh.loadValue = loadValue;
-		mesh.position = pos;
-		mesh.scale = glm::vec3(1.0f);
+		VBO* vbo = Inignoto::game->getVBO(mesh);
+
+		if (vbo != nullptr) {
+			vbo->loadValue = loadValue;
+			Inignoto::game->drawVBO(mesh);
+		}
+		delete(vbo);
 		
 	}
+	testForActivation();
 }
 
 
 void Chunk::dispose() {
-	if (this->mesh.created)
-	this->mesh.dispose();
+	Inignoto::game->deleteVBO(mesh);
 	if (needsToSave) this->save();
 }
 
@@ -204,15 +213,21 @@ bool Chunk::isLocalTileNotFull(int x, int y, int z) {
 }
 void Chunk::testForActivation() {
 	if (needsToRebuild) {
+		if (mesh != -1) Inignoto::game->deleteVBO(mesh);
 		needsToRebuild = false;
-		mesh = ChunkBuilder::buildChunk(this);
-
-		if (mesh.created == true) {
-			if (mesh.uniformBuffersMemory.size() > 0) {
-				Inignoto::game->addVBO(&mesh);
+		mesh = ChunkBuilder::buildChunk(*this);
+	}
+	if (isActive()) {
+		if (tiles.size() == 0) {
+			world->getChunkGenerator()->generateChunk(*this, false);
+		}
+	}
+	else {
+		if (mesh != -1) {
+			if (changed) {
+				mesh = ChunkBuilder::buildChunk(*this);
+				changed = false;
 			}
 		}
 	}
-	
-	
 }

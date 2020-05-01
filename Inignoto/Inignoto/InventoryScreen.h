@@ -15,6 +15,6 @@ public:
 	void render() override;
 	void close() override;
 private:
-	VBO inventory;
+	int inventory;
 };
 

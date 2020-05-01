@@ -2,7 +2,7 @@
 #include <math.h>
 #include "Inignoto.h"
 
-glm::vec3 Camera::position = glm::vec3(2, 2, 2);
+glm::vec3 Camera::position = glm::vec3(2, 64, 2);
 glm::vec3 Camera::rotation;
 
 void Camera::update() {
@@ -29,7 +29,7 @@ glm::vec3 Camera::getRight() {
 }
 
 glm::vec3 Camera::getForward(float PITCH, float YAW) {
-	float pitch = PITCH;
+	float pitch = PITCH + 180;
 	float yaw = YAW - 90;
 	float radians = 3.14f / 180.0f;
 	return glm::vec3((float)cos(radians * yaw) * (float)cos(radians * pitch), (float)sin(radians * pitch), (float)sin(radians * yaw) * (float)cos(radians * pitch));

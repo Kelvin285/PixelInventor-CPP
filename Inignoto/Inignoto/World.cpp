@@ -32,7 +32,9 @@ Chunk* World::getChunk(int x, int y, int z) {
 
 void World::removeChunk(int x, int y, int z) {
 	for (size_t i = 0; i < chunks.size(); i++) {
+		
 		if (chunks[i].position == glm::vec3(x, y, z)) {
+			std::lock_guard<std::mutex> guard(mutex);
 			chunks[i].chunk.dispose();
 			chunks.erase(chunks.begin() + i);
 			break;
@@ -53,15 +55,14 @@ void World::addChunk(int x, int y, int z) {
 	if (getChunk(x, y, z) != nullptr) {
 		return;
 	}
-	std::cout << "gen" << std::endl;
 	
 	ChunkStorage storage;
 	storage.position = glm::vec3(x, y, z);
 	storage.chunk.init(x, y, z, this);
+	
 	chunks.push_back(std::move(storage));
 
 }
-
 void World::saveChunks() {
 	if (!saveQueue.empty())
 	for (auto at : saveQueue) {
@@ -70,8 +71,15 @@ void World::saveChunks() {
 	saveQueue.clear();
 }
 
+void World::buildChunk(size_t closest) {
+	generator.generateChunk(chunks[closest].chunk, true);
+	chunks[closest].chunk.markForRerender();
+}
+
+
 void World::buildChunks() {
 	if (!adding) return;
+	
 	int cx = (int)floor(Camera::position.x / Chunk::SIZE);
 	int cy = (int)floor(Camera::position.y / Chunk::SIZE_Y);
 	int cz = (int)floor(Camera::position.z / Chunk::SIZE);
@@ -79,38 +87,51 @@ void World::buildChunks() {
 	cp.y = cy;
 	cp.z = cz;
 	double distance = 999999;
-	Chunk* closest = nullptr;
+
+	size_t closest = -1;
 	if (!chunks.empty())
 	{
 		for (size_t i = 0; i < chunks.size(); i++)
 		{
-			ChunkStorage* storage = &chunks[i];
-			double dist = glm::distance(cp, storage->position);
+			ChunkStorage& storage = chunks[i];
+			double dist = glm::distance(cp, storage.position);
 			if (dist < distance)
-			if (storage->chunk.generated == false) {
+			if (storage.chunk.generated == false) {
 				distance = dist;
-				closest = &storage->chunk;
+				closest = i;
 			}
 		}
 	}
 
-	if (closest != nullptr) {
-		generator.generateChunk(closest, true);
-
-		closest->mesh = ChunkBuilder::buildChunk(closest);
-		closest->generated = true;
-		closest->markForRerender();
+	if (closest != -1) {
+		//async_calls.push_back(std::async(std::launch::async, [&] {buildChunk(closest); }));
+		buildChunk(closest);
 	}
 }
 
 void World::updateChunkManager() {
+	static int timeUntilNext = 0;
 	if (!adding) return;
-	for (size_t i = 0; i < loadedChunks.size(); i++) {
-		if (loadedChunks[i].active == false) {
-			Inignoto::game->removeVBO(&loadedChunks[i].chunk->mesh);
+
+
+	if (timeUntilNext == 0) {
+		for (size_t i = 0; i < loadedChunks.size(); i++) {
+			if (loadedChunks[i].active == false) {
+				//Inignoto::game->removeVBO(&loadedChunks[i].chunk->mesh);
+				if (loadedChunks[i].chunk != nullptr) {
+					if (loadedChunks[i].chunk->world != 0) {
+						//async_calls.push_back(std::async(std::launch::async, [&] { }));
+						removeChunk(loadedChunks[i].chunk->getX(), loadedChunks[i].chunk->getY(), loadedChunks[i].chunk->getZ());
+						break;
+					}
+				}
+			}
 		}
+		timeUntilNext = 60;
 	}
-	
+	else {
+		timeUntilNext--;
+	}
 	loadedChunks.clear();
 
 	for (size_t i = 0; i < chunks.size(); i++) {
@@ -150,7 +171,6 @@ void World::render() {
 
 void World::renderChunks() {
 	if (adding) return;
-	std::cout << chunks.size() << std::endl;
 	for (size_t i = 0; i < chunks.size(); i++) {
 		chunks[i].chunk.render();
 	}
@@ -233,7 +253,7 @@ Tile* World::getTile(TilePos pos) {
 	return chunk->getLocalTile(x, y, z);
 }
 
-TileData* World::getTileData(TilePos pos, bool modifying) {
+TileData& World::getTileData(TilePos pos, bool modifying) {
 	int mx = (int)floor((float)pos.x / Chunk::SIZE);
 	int my = (int)floor((float)pos.y / Chunk::SIZE_Y);
 	int mz = (int)floor((float)pos.z / Chunk::SIZE);
@@ -242,7 +262,8 @@ TileData* World::getTileData(TilePos pos, bool modifying) {
 	int y = pos.y - my * Chunk::SIZE_Y;
 	int z = pos.z - mz * Chunk::SIZE;
 	
-	if (chunk == nullptr) return new TileData(Tiles::AIR.getID());
+	TileData AIR = TileData(Tiles::AIR.getID());
+	if (chunk == nullptr) return AIR;
 	return chunk->getTileData(x, y, z, modifying);
 }
 
@@ -299,12 +320,12 @@ void World::mineTile(TilePos pos, float strength) {
 	int y = pos.y - my * Chunk::SIZE_Y;
 	int z = pos.z - mz * Chunk::SIZE;
 	if (chunk != nullptr) {
-		TileData* data = chunk->getTileData(x, y, z, false);
-		data->setMiningTime(data->getMiningTime() + strength / Tiles::getTile(data->getTile())->getHardness());
-		int current = (int)(data -> getMiningTime() / 20.0);
-		int last = (int)(data->getLastMiningTime() / 20.0);
-		if (data->getMiningTime() > 100.0) {
-			data->setMiningTime(0.0);
+		TileData data = chunk->getTileData(x, y, z, false);
+		data.setMiningTime(data.getMiningTime() + strength / Tiles::getTile(data.getTile())->getHardness());
+		int current = (int)(data.getMiningTime() / 20.0);
+		int last = (int)(data.getLastMiningTime() / 20.0);
+		if (data.getMiningTime() > 100.0) {
+			data.setMiningTime(0.0);
 			chunk->setLocalTile(x, y, z, &Tiles::AIR);
 			chunk->markForRerender();
 			chunk->markForSave();

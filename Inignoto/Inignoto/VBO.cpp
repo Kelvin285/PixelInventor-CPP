@@ -3,24 +3,19 @@
 
 void VBO::createIndexBuffer() {
 	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
-	if (bufferSize == 0) created = false;
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
 	Inignoto::game->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-	if (stagingBuffer == 0 || stagingBufferMemory == 0) created = false;
 
 	void* data;
 	vkMapMemory(Inignoto::game->device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	if (data == nullptr || data == 0) created = false;
 	memcpy(data, indices.data(), (size_t)bufferSize);
-	if (data != nullptr && data != 0) created = true;
 	vkUnmapMemory(Inignoto::game->device, stagingBufferMemory);
 
 	Inignoto::game->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
 	
 	Inignoto::game->copyBuffer(stagingBuffer, indexBuffer, bufferSize);
-	if (indexBuffer == 0 || indexBufferMemory == 0) created = false;
 	vkDestroyBuffer(Inignoto::game->device, stagingBuffer, nullptr);
 	vkFreeMemory(Inignoto::game->device, stagingBufferMemory, nullptr);
 }
@@ -43,9 +38,8 @@ void VBO::render(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout,
 	VkBuffer vertexBuffers[] = { vertexBuffer };
 	VkDeviceSize offsets[] = { 0 };
 	
-
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers, offsets);
-
+	
 	vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
@@ -66,8 +60,8 @@ void VBO::updateUniformBuffer(VkExtent2D swapChainExtent, size_t currentImage) {
 		ubo.model = glm::rotate(ubo.model, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 		ubo.model = glm::rotate(ubo.model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 		ubo.model = glm::rotate(ubo.model, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-		ubo.model = glm::scale(ubo.model, scale * glm::vec3(1, -1, 1));
-		ubo.view = glm::lookAt(-Camera::position, -Camera::position + Camera::getForward(), Camera::getUp());
+		ubo.model = glm::scale(ubo.model, scale * glm::vec3(1, 1, 1));
+		ubo.view = glm::lookAt(Camera::position, Camera::position - Camera::getForward(), Camera::getUp());
 		ubo.proj = glm::perspective(glm::radians(Settings::ACTUAL_FOV), swapChainExtent.width / (float)swapChainExtent.height, Constants::Z_NEAR, Constants::Z_FAR);
 	}
 	else {
@@ -162,60 +156,35 @@ void VBO::createDescriptorPool() {
 }
 
 void VBO::createVertexBuffer() {
-	bool cancreate = true;
+	created = false;
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 	if (sizeof(vertices[0]) * vertices.size() == 0) {
 		std::cout << "Cannot create!" << std::endl;
 		created = false;
-		cancreate = false;
 	}
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
 	Inignoto::game->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
-	if (bufferSize == 0 || stagingBuffer == 0 || stagingBufferMemory == 0) {
-		cancreate = false;
-	}
-
 	void* data;
 	vkMapMemory(Inignoto::game->device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	if (data == nullptr || data == 0) cancreate = false;
 	memcpy(data, vertices.data(), (size_t)bufferSize);
 	vkUnmapMemory(Inignoto::game->device, stagingBufferMemory);
 	
 	Inignoto::game->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
-	if (vertexBuffer == 0 || vertexBufferMemory == 0) cancreate = false;
 	Inignoto::game->copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
-	if (vertexBuffer != 0) cancreate = true;
 	vkDestroyBuffer(Inignoto::game->device, stagingBuffer, nullptr);
 	vkFreeMemory(Inignoto::game->device, stagingBufferMemory, nullptr);
-	created = cancreate;
 
 	createIndexBuffer();
 	createUniformBuffers();
 	createDescriptorPool();
 	createDescriptorSets();
-	for (auto at : vertices) {
-		if (glm::isnan(at.color).x || glm::isnan(at.color).y || glm::isnan(at.color).z) {
-			std::cout << "NAN COLOR!" << std::endl;
-			created = false;
-			break;
-		}
-		if (glm::isnan(at.pos).x || glm::isnan(at.pos).y || glm::isnan(at.pos).z) {
-			std::cout << "NAN POS!" << std::endl;
-			created = false;
-			break;
-		}
-		if (glm::isnan(at.texCoord).x || glm::isnan(at.texCoord).y) {
-			std::cout << "NAN TEXCOORD!" << std::endl;
-			created = false;
-			break;
-		}
-	}
+	created = true;
 }
 
 void VBO::dispose() {
-	std::cout << "DISPOSE!" << std::endl;
+	
 	if (disposed) return;
 	for (size_t i = 0; i < uniformBuffers.size(); i++) {
 		vkDestroyBuffer(Inignoto::game->device, uniformBuffers[i], nullptr);
@@ -229,4 +198,6 @@ void VBO::dispose() {
 	vkDestroyBuffer(Inignoto::game->device, indexBuffer, nullptr);
 	vkFreeMemory(Inignoto::game->device, indexBufferMemory, nullptr);
 	disposed = true;
+	vertices.clear();
+	indices.clear();
 }

@@ -9,20 +9,25 @@ ChunkGenerator::ChunkGenerator(World* world, long seed) {
 	}
 }
 
-void ChunkGenerator::generateChunk(Chunk* chunk, bool structures) {
-	chunk->tiles.clear();
-	chunk->tiles.resize(Chunk::SIZE * Chunk::SIZE_Y * Chunk::SIZE);
-	if (chunk->load()) return;
+void ChunkGenerator::generateChunk(Chunk& chunk, bool structures) {
+	if (chunk.tiles.size() == 0) {
+		chunk.tiles.resize(Chunk::NUM_TILES);
+	}
+	if (!chunk.tiles.data()) {
+		std::cout << "could not allocate memory for tiles" << std::endl;
+		return;
+	}
+	if (chunk.load()) return;
 	for (int x = 0; x < Chunk::SIZE; x++) {
 		for (int y = 0; y < Chunk::SIZE_Y; y++) {
 			for (int z = 0; z < Chunk::SIZE; z++) {
-				chunk->setLocalTile(x, y, z, &Tiles::AIR);
+				chunk.setLocalTile(x, y, z, &Tiles::AIR);
 			}
 		}
 	}
-	int nx = chunk->getX() * Chunk::SIZE;
-	int ny = chunk->getY() * Chunk::SIZE;
-	int nz = chunk->getZ() * Chunk::SIZE;
+	int nx = chunk.getX() * Chunk::SIZE;
+	int ny = chunk.getY() * Chunk::SIZE;
+	int nz = chunk.getZ() * Chunk::SIZE;
 	for (int x = 0; x < Chunk::SIZE; x++) {
 		for (int z = 0; z < Chunk::SIZE; z++) {
 			int X = nx + x;
@@ -33,16 +38,17 @@ void ChunkGenerator::generateChunk(Chunk* chunk, bool structures) {
 				int Y = ny + y;
 
 				if (Y == height) {
-					chunk->setLocalTile(x, y, z, topTile);
+					chunk.setLocalTile(x, y, z, topTile);
 				}
 				if (Y < height) {
-					chunk->setLocalTile(x, y, z, &Tiles::DIRT);
+					chunk.setLocalTile(x, y, z, &Tiles::DIRT);
 					//add tree structure to chunk?
 				}
 			}
 		}
 	}
-	chunk->markForRerender();
+	chunk.markForRerender();
+	chunk.generated = true;
 }
 
 float ChunkGenerator::getHeight(float x, float z) {

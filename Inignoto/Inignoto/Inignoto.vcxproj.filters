@@ -257,6 +257,9 @@
     <ClCompile Include="WorldSaver.cpp">
       <Filter>Source Files\Inignoto\world</Filter>
     </ClCompile>
+    <ClCompile Include="BlockBuilder.cpp">
+      <Filter>Source Files\Inignoto\Client\rendering\chunk</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\Inignoto\shaders\fragment.glsl">

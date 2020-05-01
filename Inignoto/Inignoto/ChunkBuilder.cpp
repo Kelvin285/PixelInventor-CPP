@@ -1,10 +1,11 @@
 #include "ChunkBuilder.h"
 #include "Chunk.h"
+#include "Inignoto.h"
 
-VBO ChunkBuilder::buildChunk(Chunk* chunk) {
+int ChunkBuilder::buildChunk(Chunk& chunk) {
 
-	VBO vbo;
-	if (chunk->voxels <= 0) return vbo;
+	int vbo = -1;
+	if (chunk.voxels <= 0) return vbo;
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> texCoords;
 	std::vector<uint32_t> indices;
@@ -21,27 +22,30 @@ VBO ChunkBuilder::buildChunk(Chunk* chunk) {
 		};
 		verts[i] = v;
 	}
-	vbo.vertices = verts;
-	vbo.indices = indices;
+	CreateVBO create;
+	create.vertices = verts;
+	create.indices = indices;
+	create.orthographic = false;
+	create.position = chunk.pos;
 
-	return vbo;
+	return Inignoto::game->addVBO(create);
 }
 
-uint32_t ChunkBuilder::buildChunk(Chunk* chunk, std::vector<glm::vec3>* vertices, std::vector<uint32_t>* indices, std::vector<glm::vec2>* texCoords, int index) {
-	if (chunk->voxels <= 0) return index;
+uint32_t ChunkBuilder::buildChunk(Chunk& chunk, std::vector<glm::vec3>* vertices, std::vector<uint32_t>* indices, std::vector<glm::vec2>* texCoords, int index) {
+	if (chunk.voxels <= 0) return index;
 	
 	for (size_t x = 0; x < Chunk::SIZE; x++) {
 		for (size_t y = 0; y < Chunk::SIZE_Y; y++) {
 			for (size_t z = 0; z < Chunk::SIZE; z++) {
-				TileData* data = chunk->getTileData(x, y, z, false);
-				Tile* tile = Tiles::getTile(data->getTile());
+				TileData& data = chunk.getTileData(x, y, z, false);
+				Tile* tile = Tiles::getTile(data.getTile());
 				if (tile->isFull() && tile->isVisible()) {
-					if (chunk->isLocalTileNotFull(x - 1, y, z)) index = BlockBuilder::addFace(x, y, z, BlockFace::LEFT, data, vertices, texCoords, indices, index);
-					if (chunk->isLocalTileNotFull(x + 1, y, z)) index = BlockBuilder::addFace(x, y, z, BlockFace::RIGHT, data, vertices, texCoords, indices, index);
-					if (chunk->isLocalTileNotFull(x, y, z - 1)) index = BlockBuilder::addFace(x, y, z, BlockFace::FRONT, data, vertices, texCoords, indices, index);
-					if (chunk->isLocalTileNotFull(x, y, z + 1)) index = BlockBuilder::addFace(x, y, z, BlockFace::BACK, data, vertices, texCoords, indices, index);
-					if (chunk->isLocalTileNotFull(x, y + 1, z)) index = BlockBuilder::addFace(x, y, z, BlockFace::UP, data, vertices, texCoords, indices, index);
-					if (chunk->isLocalTileNotFull(x, y - 1, z)) index = BlockBuilder::addFace(x, y, z, BlockFace::DOWN, data, vertices, texCoords, indices, index);
+					if (chunk.isLocalTileNotFull(x - 1, y, z)) index = BlockBuilder::addFace(x, y, z, BlockFace::LEFT, data, vertices, texCoords, indices, index);
+					if (chunk.isLocalTileNotFull(x + 1, y, z)) index = BlockBuilder::addFace(x, y, z, BlockFace::RIGHT, data, vertices, texCoords, indices, index);
+					if (chunk.isLocalTileNotFull(x, y, z - 1)) index = BlockBuilder::addFace(x, y, z, BlockFace::FRONT, data, vertices, texCoords, indices, index);
+					if (chunk.isLocalTileNotFull(x, y, z + 1)) index = BlockBuilder::addFace(x, y, z, BlockFace::BACK, data, vertices, texCoords, indices, index);
+					if (chunk.isLocalTileNotFull(x, y + 1, z)) index = BlockBuilder::addFace(x, y, z, BlockFace::UP, data, vertices, texCoords, indices, index);
+					if (chunk.isLocalTileNotFull(x, y - 1, z)) index = BlockBuilder::addFace(x, y, z, BlockFace::DOWN, data, vertices, texCoords, indices, index);
 				}
 			}
 		}

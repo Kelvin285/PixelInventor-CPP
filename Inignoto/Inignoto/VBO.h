@@ -23,6 +23,8 @@
 class VBO {
 public:
 
+	VBO() = default;
+
 	bool orthographic = false;
 	bool created = false;
 	bool visible = true;
@@ -43,38 +45,6 @@ public:
 	
 	VkDescriptorPool descriptorPool;
 	std::vector<VkDescriptorSet> descriptorSets;
-
-	VBO() {}
-
-	VBO(VBO&& vbo) noexcept : orthographic(std::move(vbo.orthographic)), created(std::move(vbo.created)),
-	visible(std::move(vbo.visible)), loadValue(std::move(vbo.loadValue)), position(std::move(vbo.position)),
-	rotation(std::move(vbo.rotation)), scale(std::move(vbo.scale)), vertices(std::move(vbo.vertices)), indices(std::move(vbo.indices)), 
-	uniformBuffers(std::move(vbo.uniformBuffers)), uniformBuffersMemory(std::move(vbo.uniformBuffersMemory)),
-	vertexBuffer(std::move(vbo.vertexBuffer)), vertexBufferMemory(std::move(vbo.vertexBufferMemory)),
-	indexBuffer(std::move(vbo.indexBuffer)), indexBufferMemory(std::move(vbo.indexBufferMemory)), descriptorPool(std::move(vbo.descriptorPool)),
-	descriptorSets(std::move(vbo.descriptorSets)){
-
-	}
-	VBO& operator=(VBO&& vbo) {
-		orthographic = std::move(vbo.orthographic);
-		created = std::move(vbo.created);
-		visible = std::move(vbo.visible);
-		loadValue = std::move(vbo.loadValue);
-		position = std::move(vbo.position);
-		rotation = std::move(vbo.rotation);
-		scale = std::move(vbo.scale);
-		vertices = std::move(vbo.vertices);
-		indices = std::move(vbo.indices);
-		uniformBuffers = std::move(vbo.uniformBuffers);
-		uniformBuffersMemory = std::move(vbo.uniformBuffersMemory);
-		vertexBuffer = std::move(vbo.vertexBuffer);
-		vertexBufferMemory = std::move(vbo.vertexBufferMemory);
-		indexBuffer = std::move(vbo.indexBuffer);
-		indexBufferMemory = std::move(vbo.indexBufferMemory);
-		descriptorPool = std::move(vbo.descriptorPool);
-		descriptorSets = std::move(vbo.descriptorSets);
-		return *this;
-	}
 
 	bool disposed;
 
